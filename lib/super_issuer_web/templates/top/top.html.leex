@@ -1,0 +1,14 @@
+<div style="width:30%;margin: 0 auto;">
+    <%= for cre <- @credentials do %>
+    <b>所有者：</b>
+    <br>
+    <%= cre.user.username %>
+    <br>
+    <b>证书内容：</b>
+    <br>
+    <%= Poison.encode!(cre.credential) %>
+    ---
+    <br>
+
+    <% end %>
+</div>

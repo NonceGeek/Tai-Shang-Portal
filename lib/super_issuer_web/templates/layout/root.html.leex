@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"/>
+    <title><%= assigns[:page_title] || "微芒 · 星辰" %></title>
+    <%= csrf_meta_tag() %>
+
+
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/bootstrap.min.css") %>"/>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/bootstrap.bundle.min.js") %>"></script>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/application.css") %>"/>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  </head>
+  <body>
+    <header>
+    <header>
+      <section class="container">
+        <nav role="navigation">
+          <ul>
+            <li>
+              <%= if Plug.Conn.get_session(@conn, :current_user_id) do %>
+                <%= link @conn
+                |> Plug.Conn.get_session(:current_user_id)
+                |> SuperIssuer.User.get_by_user_id()
+                |> Map.get(:username),
+                 to: Routes.user_path(@conn, :index)%>
+              <% else %>
+                <%= link "Sign in", to: Routes.session_path(@conn, :new) %>
+                <!--<%= link "Sign up", to: Routes.user_path(@conn, :new) %>-->
+              <% end %>
+            </li>
+            <!--<%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
+            <% end %>-->
+          </ul>
+        </nav>
+        <a href="/" class="phx-logo">
+          <center><h1>微芒 · 星辰</h1></center>
+        </a>
+      </section>
+    </header>
+    <div style="width:35.5%; margin: 0 auto;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <!--<li class="nav-item">
+              <a class="nav-link active" href="/live/nodeshow" >节点浏览器 · 可视化版</a>
+            </li>-->
+            <li class="nav-item">
+              <a class="nav-link active" href="https://weimang.cyberemd.com/explorer/#/home" >区块链浏览器</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">证书查询</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="https://cheatsheet.cyberemd.com" >知识库</a>
+            </li>
+            <!--<li class="nav-item">
+              <a class="nav-link active" href="#">存证查询</a>
+            </li>-->
+          </ul>
+        </div>
+      </div>
+    </nav>
+    </div>
+
+    <%= @inner_content %>
+  </body>
+</html>

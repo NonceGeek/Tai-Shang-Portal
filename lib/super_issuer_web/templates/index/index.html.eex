@@ -1,0 +1,51 @@
+<section class="phx-hero">
+
+  <p><%= gettext "%{slogan}", slogan: @payload.slogan %></p>
+  <h1>微芒 · 星辰
+    <br>
+    区块链产业人才培养计划
+  </h1>
+
+</section>
+<div>
+<p>
+  目前各行业对于区块链专业人才的需求越来越大，但区块链专业人才严重缺乏正成为制约行业发展的掣肘之一。未来各地区块链产业园的竞争主要是政策落地力度、产业基础和人才的竞争。柏链教育将联合FISCO  BCOS、世纪互联、中关村区块链产业联盟、金戈教育、头部区块链研发企业等共同发起面向星沙区块链产业园与全国高校的“微芒星辰计划”，旨在为学员们提供线上学习，链上记录的区块链学习计划，以实际行动助力我国数字化区块链产业能力提升与创新。
+</p>
+<center>
+    <h2>证书验证</h2>
+  </center>
+  <%= form_for @payload.changeset, "/", [multipart: true], fn f -> %>
+    <div class="form-group">
+    <!--<label>
+      Pubkey: <%= text_input f, :pubkey %>
+    </label>-->
+
+      <label>File</label>
+      <%= file_input f, :file, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= submit "读", class: "btn btn-primary", name: "btn_clicked", value: "read" %>
+      &nbsp&nbsp&nbsp
+      <%= submit "验", class: "btn btn-primary", name: "btn_clicked", value: "verify" %>
+    </div>
+  <% end %>
+</div>
+
+  <%= if Plug.Conn.get_session(@conn, :current_user_id) do %>
+    <%= live_render(@conn, SuperIssuerWeb.EvidencerLive) %>
+    <!--<%= button("add evidence",
+    to: "live/evidence",
+    method: :get)%>-->
+    <br>
+    <%= button("add contract",
+      to: "live/contract",
+      method: :get)%>
+    <br>
+    <%= button("add credential",
+      to: "live/credential/new",
+      method: :get)%>
+  <% end %>
+
+
+  </article>
+</section>
