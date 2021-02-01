@@ -1,1 +1,33 @@
 @import "./pacman.css";
+
+#the_header {
+    width:35.5%;
+    margin: 0 auto;
+}
+@media only screen and (max-width: 600px) {
+    #the_header {
+        width:100%;
+        margin: 0 auto;
+    }
+    header {
+        margin-bottom: 0rem;
+    }
+    .navbar-collapse.collapse {
+    display: block!important;
+    }
+    .navbar-nav>li, .navbar-nav {
+        float: left !important;
+        width: 100%;
+    }
+    li {
+        text-align: center;
+    }
+    
+    .navbar-nav.navbar-right:last-child {
+    margin-right: -15px !important;
+    }
+    
+    .navbar-right {
+    float: right!important;
+    }
+}
