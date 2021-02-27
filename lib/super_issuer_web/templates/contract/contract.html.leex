@@ -12,9 +12,9 @@
     <%= text_input f, :type %>
     <%= error_tag f, :type %>
 
-    <%= label f, :describe %>
-    <%= text_input f, :describe %>
-    <%= error_tag f, :describe %>
+    <%= label f, :description %>
+    <%= text_input f, :description %>
+    <%= error_tag f, :description %>
 
     <%= label f, :init_params %>
     <%= text_input f, :init_params %>
@@ -27,4 +27,12 @@
         <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>
 </form>
+    <%= for contract <- @contracts do %>
+        <b>Addr：</b><%= contract.addr%>
+        <br>
+        <b>Init Params：</b><%= contract.init_params%>
+        <br>
+        <b>Creator：</b><%= contract.creater%>
+        <hr>
+    <% end %>
 </div>

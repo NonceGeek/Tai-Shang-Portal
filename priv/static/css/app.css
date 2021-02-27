@@ -16,6 +16,7 @@ h4{font-size: 1.8rem; letter-spacing: -.05rem; line-height: 1.5}
 h5{font-size: 1.6rem; letter-spacing: 0; line-height: 1.4}
 h6{font-size: 1.4rem; letter-spacing: 0; line-height: 1.2}
 pre{padding: 1em;}
+
 .container{
   margin: 0 auto;
   max-width: 80.0rem;
@@ -70,8 +71,6 @@ header section :first-child {
 header section :last-child {
   order: 1;
 }
-
-
 header nav ul,
 header nav li {
   margin: 0;

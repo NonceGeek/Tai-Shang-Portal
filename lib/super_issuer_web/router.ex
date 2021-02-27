@@ -38,13 +38,17 @@ defmodule SuperIssuerWeb.Router do
 
     live "/live/nodeshow", NodeShowLive
 
+    live "/live/event", EventLive
+
     # live "/", PageLive, :index
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", SuperIssuerWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", SuperIssuerWeb do
+    pipe_through :api
+    get "/contracts", AppController, :get_contracts
+    post "/contract/func", AppController, :interact_with_contract
+  end
 
   # Enables LiveDashboard only for development
   #

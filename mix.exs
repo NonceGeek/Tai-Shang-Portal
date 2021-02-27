@@ -55,6 +55,7 @@ defmodule SuperIssuer.MixProject do
       {:binary, "~> 0.0.5"},
       # eth
       {:ex_rlp, "~> 0.5.3"},
+      {:ksha3, "~> 1.0.0", git: "https://github.com/peatio/ksha3.git", branch: "master"},
       # ecto
       {:ecto_enum, "~> 1.2"},
       # for login

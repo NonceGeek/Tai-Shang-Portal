@@ -2,13 +2,15 @@ defmodule SuperIssuer.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Comeonin.Bcrypt
-  alias SuperIssuer.{User, Credential}
+  alias SuperIssuer.{User, WeIdentity, Credential}
   alias SuperIssuer.Repo
 
   schema "user" do
     field :encrypted_password, :string
     field :username, :string
-    field :weid, :string
+
+    field :group, :integer
+    has_one :weidentity, WeIdentity
     has_many :credential, Credential
     timestamps()
   end
@@ -25,24 +27,26 @@ defmodule SuperIssuer.User do
     Repo.get_by(User, id: id)
   end
 
-  def get_by_weid(id) do
-    Repo.get_by(User, weid: id)
-  end
-
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
   end
 
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+  def change(%User{} = ele, attrs) do
+    ele
+    |> changeset(attrs)
+    |> Repo.update()
+  end
+
+  def changeset(%User{} = ele) do
+    User.changeset(ele, %{})
   end
 
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:username, :encrypted_password, :weid])
+    |> cast(attrs, [:username, :encrypted_password, :group])
     |> unique_constraint(:username)
     |> validate_required([:username, :encrypted_password])
     |> update_change(:encrypted_password, &Bcrypt.hashpwsalt/1)

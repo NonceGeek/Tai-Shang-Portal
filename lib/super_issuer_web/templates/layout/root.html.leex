@@ -27,8 +27,8 @@
                 |> Map.get(:username),
                  to: Routes.user_path(@conn, :index)%>
               <% else %>
-                <%= link "Sign in", to: Routes.session_path(@conn, :new) %>
-                <!--<%= link "Sign up", to: Routes.user_path(@conn, :new) %>-->
+                <%= link "登录", to: Routes.session_path(@conn, :new) %>
+                <%= link "注册", to: Routes.user_path(@conn, :new) %>
               <% end %>
             </li>
             <!--<%= if function_exported?(Routes, :live_dashboard_path, 2) do %>

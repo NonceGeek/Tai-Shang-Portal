@@ -1,7 +1,8 @@
 defmodule SuperIssuerWeb.IndexController do
   use SuperIssuerWeb, :controller
-  alias SuperIssuer.CredentialVerifier, as: CredentialVerifier
-  alias SuperIssuer.WeidAdapter, as: WeidAdapter
+  alias SuperIssuer.CredentialVerifier
+  alias SuperIssuer.WeidInteractor
+  alias SuperIssuer.Chain
 
   @payload %{
     name: "微芒·星辰区块链产业人才培养计划",
@@ -32,7 +33,8 @@ defmodule SuperIssuerWeb.IndexController do
       |> File.read!()
       |> Poison.decode!()
 
-    {_result, msg} = WeidAdapter.verify_credential_pojo(credential)
+    chain = Chain.get_default_chain()
+    {_result, msg} = WeidInteractor.verify_credential_pojo(chain, credential)
 
     conn
     |> put_flash(:info, handle_msg(msg))

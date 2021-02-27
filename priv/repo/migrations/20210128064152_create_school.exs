@@ -11,5 +11,15 @@ defmodule SuperIssuer.Repo.Migrations.CreateSchool do
       add :representative,{:array, :map}
       timestamps()
     end
+
+    alter table :user do
+      add :group, :integer
+    end
+    create table :weidentity do
+      add :user_id, :integer
+      add :weid, :string
+      add :description, :string
+      timestamps()
+    end
   end
 end

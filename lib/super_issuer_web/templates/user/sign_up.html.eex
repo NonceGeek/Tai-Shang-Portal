@@ -1,5 +1,5 @@
 <h2>Sign up</h2>
-<%= form_for @changeset, Routes.user_path(@conn, :create), fn f -> %>
+<%= f = form_for @changeset, Routes.user_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -17,6 +17,12 @@
     <%= label f, :password, class: "control-label" %>
     <%= password_input f, :encrypted_password, class: "form-control" %>
     <%= error_tag f, :encrypted_password %>
+  </div>
+  <div class="form-group">
+    <div class="form-group">
+    <%= label f, :weid, class: "control-label" %>
+    <%= text_input f, :weid, class: "form-control" %>
+    <%= error_tag f, :weid_t %>
   </div>
 
   <div class="form-group">

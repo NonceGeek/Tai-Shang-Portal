@@ -7,7 +7,7 @@ defmodule SuperIssuer.Evidence do
   schema "evidence" do
     field :key, :string
     field :value, :string
-    field :describe, :string
+    field :description, :string
     field :tx_id, :string
     field :owners, {:array, :string}
     field :signers, {:array, :string}
@@ -46,6 +46,6 @@ defmodule SuperIssuer.Evidence do
   @doc false
   def changeset(%Evidence{} = evi, attrs) do
     evi
-    |> cast(attrs, [:key, :value, :describe, :contract_id, :tx_id, :owners, :signers])
+    |> cast(attrs, [:key, :value, :description, :contract_id, :tx_id, :owners, :signers])
   end
 end

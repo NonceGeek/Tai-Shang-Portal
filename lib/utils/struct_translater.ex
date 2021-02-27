@@ -31,15 +31,23 @@ defmodule StructTranslater do
   #  | struct <=> map |
   #  +----------------+
 
-  @spec struct_to_map(atom | %{:__struct__ => atom, optional(atom) => any}) :: map
   def struct_to_map(struct) do
-    map =
-      struct
-      |> Map.from_struct()
-      |> Map.delete(:__meta__)
-
-    :maps.filter(fn _, v -> Ecto.assoc_loaded?(v) end, map)
+    struct
+    |> Map.from_struct()
+    |> Map.delete(:__meta__)
+    |> Enum.reject(fn {_, v} ->
+      case is_assoc_loaded_type?(v) do
+        true ->
+          not Ecto.assoc_loaded?(v)
+        false ->
+          false
+      end
+    end)
+    |> Enum.into(%{})
   end
+
+  def is_assoc_loaded_type?(%Ecto.Association.NotLoaded{}), do: true
+  def is_assoc_loaded_type?(_), do: false
 
   @doc """
     e.g.: map_to_struct(Asset, params_map)

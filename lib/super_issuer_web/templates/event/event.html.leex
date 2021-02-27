@@ -1,0 +1,7 @@
+<div style="width:60% ;margin: 0 auto;">
+    <p><%= live_flash(@flash, :info) %></p>
+    <p><%= live_flash(@flash, :error) %></p>
+    <%= for event <- @events do %>
+    <%= event.data %>
+    <% end %>
+</div>
