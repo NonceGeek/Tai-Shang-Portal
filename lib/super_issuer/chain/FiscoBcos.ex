@@ -93,11 +93,11 @@ defmodule SuperIssuer.Chain.FiscoBcos do
     |> StructTranslater.to_atom_struct()
     |> do_handle_receipt()
   end
-  def do_handle_receipt(%{from: from_addr, to: to_addr, transactionHash: tx_hash, logs: logs}) do
+  def do_handle_receipt(%{from: from_addr, to: to_addr, transactionHash: tx_hash, logs: logs, blockNumber: block_height}) do
     tx = build_tx(from_addr, to_addr, tx_hash)
     events =
       Enum.map(logs, fn %{address: addr, data: data, logIndex: log_index,topics: topics} ->
-        build_event(addr, data, log_index, topics)
+        build_event(addr, data, log_index, topics, block_height)
       end)
     Map.put(tx, :event, events)
   end
@@ -110,12 +110,13 @@ defmodule SuperIssuer.Chain.FiscoBcos do
     }
   end
 
-  def build_event(addr, data, log_index, topics) do
+  def build_event(addr, data, log_index, topics, block_height) do
     %Event{
       address: addr,
       data: data,
       topics: topics,
-      log_index: log_index
+      log_index: log_index,
+      block_height: block_height
     }
   end
 

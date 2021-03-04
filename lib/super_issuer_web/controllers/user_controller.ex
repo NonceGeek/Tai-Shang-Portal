@@ -24,7 +24,10 @@ defmodule SuperIssuerWeb.UserController do
       User.changeset(%User{}, user_params)
 
     Repo.transaction(fn ->
-      case do_create(chain, user_params) do
+      chain
+      |> put_group(user_params)
+      |> do_create()
+      |> case do
         {:error, payload} ->
         # error handler
           Repo.rollback("reason: #{inspect(payload)}")
@@ -35,9 +38,12 @@ defmodule SuperIssuerWeb.UserController do
     |> handle_create_result(conn, changeset)
   end
 
-  def do_create(chain, user_params) do
+  def put_group(chain, user_params) do
     user_params_restructured =
       Map.put(user_params, "group", 0)
+    {chain, user_params_restructured}
+  end
+  def do_create({chain, user_params_restructured}) do
     with {:ok, user} <- User.create_user(user_params_restructured),
          {:ok, _info} <- weid_exist?(chain, user_params_restructured),
          {:ok, weid_params} <- restructure_params(user_params_restructured, user),

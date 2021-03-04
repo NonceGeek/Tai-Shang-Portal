@@ -2,20 +2,22 @@ defmodule SuperIssuerWeb.EvidencerLive do
 
   use Phoenix.LiveView
   alias SuperIssuerWeb.EvidencerView
-  alias SuperIssuer.{Contract, EvidenceHandler}
+  alias SuperIssuer.{User, Contract, EvidenceHandler}
 
   def render(assigns) do
     EvidencerView.render("evidencer.html", assigns)
   end
 
   def mount(_params, %{
-    "current_user_id" => 1
+    "current_user_id" => id
   }, socket) do
+    user = User.get_by_user_id(id)
     contracts =
       "Evidence"
       |> Contract.get_by_type()
 
-    do_mount(contracts, socket)
+    socket
+    |> do_mount(contracts, user)
   end
 
   def mount(_params, _, socket) do
@@ -25,7 +27,7 @@ defmodule SuperIssuerWeb.EvidencerLive do
     }
   end
 
-  def do_mount([], socket) do
+  def do_mount(socket, [], %{group: 1}) do
     {:ok,
       socket
       |> assign(form: :payloads)
@@ -34,8 +36,7 @@ defmodule SuperIssuerWeb.EvidencerLive do
     }
   end
 
-  def do_mount(contracts, socket) do
-    IO.puts inspect socket.assigns
+  def do_mount(socket, contracts,  %{group: 1}) do
     contracts_des =
       contracts
       |> Enum.map(fn c->
@@ -51,6 +52,13 @@ defmodule SuperIssuerWeb.EvidencerLive do
     |> assign(form: :payloads)
     |> assign(contracts: contracts_des)
     |> assign(signers: signers)
+  }
+  end
+
+  def mount(_params, _, socket) do
+    {:ok,
+    socket
+    |> redirect(to: "/")
   }
   end
 

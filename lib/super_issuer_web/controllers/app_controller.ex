@@ -1,22 +1,26 @@
 defmodule SuperIssuerWeb.AppController do
-  alias SuperIssuer.{AppCenter, App, Contract, EvidenceHandler}
+  alias SuperIssuer.{AppCenter, App, Chain, Contract, EvidenceHandler, WeidInteractor}
   use SuperIssuerWeb, :controller
 
   @resp_success %{
-    "error_code" => 0,
-    "error_msg" => "success",
-    "result" => ""
+    error_code: 0,
+    error_msg: "success",
+    result: ""
   }
 
   @resp_failure %{
-    "error_code" => 1,
-    "error_msg" => "",
-    "result" => ""
+    error_code: 1,
+    error_msg: "",
+    result: ""
   }
 
   # +---------------+
   # | contracts api |
   # +---------------+
+
+  @doc """
+    [api]/contracts
+  """
   def get_contracts(conn, params) do
     params
     |> StructTranslater.to_atom_struct()
@@ -41,7 +45,7 @@ defmodule SuperIssuerWeb.AppController do
   def do_get_contracts({:error, info}, conn) do
     payload =
       @resp_failure
-      |> Map.put("error_msg", info)
+      |> Map.put(:error_msg, info)
     json(conn, payload)
   end
 
@@ -59,10 +63,14 @@ defmodule SuperIssuerWeb.AppController do
     end)
   end
 
+  @doc """
+    [api]/contract/func
+  """
   def interact_with_contract(conn, params) do
     params_struct =  StructTranslater.to_atom_struct(params)
     params_struct
     |> auth()
+    # |> has_contract_permission?(params_struct)
     |> do_interact_with_contract(params_struct, conn)
   end
 
@@ -76,8 +84,18 @@ defmodule SuperIssuerWeb.AppController do
       = c_id
         |> Contract.get_by_id()
         |> Contract.preload()
-    try do
+    payload_res =
+      get_payload(chain, contract, func_name, payload)
 
+    json(conn, payload_res)
+  end
+
+  def do_interact_with_contract({:error, info}, _params_struct, conn) do
+    json(conn, %{error: info})
+  end
+
+  def get_payload(chain, contract, func_name, payload) do
+    try do
       case contract.type do
         "Evidence" ->
           case func_name do
@@ -89,23 +107,48 @@ defmodule SuperIssuerWeb.AppController do
                   contract,
                   payload.evidence)
               evi_struct = StructTranslater.struct_to_map(evi)
-              payload =
-                Map.put(@resp_success, :result, evi_struct)
-              json(conn, payload)
+
+              Map.put(@resp_success, :result, evi_struct)
           end
       end
-
     catch
       error ->
-        payload =
-          Map.put(@resp_failure, :result, inspect(error))
-        json(conn, payload)
+        Map.put(@resp_failure, :result, inspect(error))
     end
-
-
   end
 
-  def do_interact_with_contract({:error, info}, _params_struct, conn) do
+  # +----------+
+  # | weid api |
+  # +----------+
+
+  def create_weid(conn, params) do
+    params_struct =
+      params
+      |> StructTranslater.to_atom_struct()
+
+    params_struct
+    |> auth()
+    |> has_weid_permission?()
+    |> do_create_weid(params_struct, conn)
+  end
+
+  def has_weid_permission?({:ok, %{weid_permission: 1} = app}) do
+    {:ok, app}
+  end
+  def has_weid_permission?({:ok, %{weid_permission: _others}}) do
+    {:error, "this app is not allowed to use weid"}
+  end
+  def has_weid_permission?(others), do: others
+
+  def do_create_weid({:ok, _app}, %{chain_id: chain_id}, conn) do
+    chain = Chain.get_by_id(chain_id)
+    {:ok, weid} = WeidInteractor.create_weid(chain)
+    payload = Map.put(@resp_success, :result, weid)
+    json(conn, payload)
+  end
+
+  def do_create_weid({:error, info}, _params_struct, conn) do
     json(conn, %{error: info})
   end
+
 end

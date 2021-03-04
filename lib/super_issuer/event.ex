@@ -1,6 +1,7 @@
 defmodule SuperIssuer.Event do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, warn: false
   alias SuperIssuer.Repo
   alias SuperIssuer.{Tx, Event}
 
@@ -8,9 +9,19 @@ defmodule SuperIssuer.Event do
     field :topics, {:array, :string}
     field :data, :string
     field :address, :string
+    field :block_height, :integer
     field :log_index, :integer
     belongs_to :tx, Tx
     timestamps()
+  end
+
+  def list(current_page, per_page) do
+    Repo.all(
+      from e in Event,
+        order_by: [desc: e.block_height],
+        offset: ^((current_page - 1) * per_page),
+        limit: ^per_page
+    )
   end
 
   def get_all() do
@@ -35,6 +46,6 @@ defmodule SuperIssuer.Event do
   @doc false
   def changeset(%Event{} = ele, attrs) do
     ele
-    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index])
+    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height])
   end
 end

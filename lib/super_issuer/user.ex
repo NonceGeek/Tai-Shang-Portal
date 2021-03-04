@@ -10,6 +10,7 @@ defmodule SuperIssuer.User do
     field :username, :string
 
     field :group, :integer
+    # group: 1 - admin, 0 - normal
     has_one :weidentity, WeIdentity
     has_many :credential, Credential
     timestamps()

@@ -1,0 +1,15 @@
+<div style="width:30% ;margin: 0 auto;">
+    <%= for app <- @apps do %>
+    <div class="card">
+        <div class="card-header">
+            应用编号： # <%= app.id %>
+        </div>
+        <div class="card-body">
+            <img style="width:500px" src="<%= Routes.static_path(@socket, "/images/apps/#{app.name}.png") %>" class="card-img-top" alt="...">
+            <h5 class="card-title"><%= app.description %></h5>
+            <br>
+            <a type="button" target="_blank" href="<%= app.url%>" class="btn btn-warning btn-lg" style="width:200px">查看应用</a>
+        </div>
+    </div>
+    <% end %>
+</div>

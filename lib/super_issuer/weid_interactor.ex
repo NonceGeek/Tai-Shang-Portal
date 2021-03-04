@@ -30,14 +30,9 @@ defmodule SuperIssuer.WeidInteractor do
     create weid hosting by weid-restful-service
   """
 
-  def create_weid(_node, :test) do
-    MockCenter.create_weid_result()
-  end
-
   def exist?(chain, weid) do
-    node = get_weid_node(chain)
 
-    node
+    chain
     |> get_weid_document(weid)
     |> do_exist?()
   end
@@ -56,6 +51,8 @@ defmodule SuperIssuer.WeidInteractor do
   end
 
   def get_weid_document(chain, weid) do
+    IO.puts inspect chain
+    IO.puts inspect weid
     node = get_weid_node(chain)
     body_get_weid_doc = %{@body_get_weid_doc | "functionArg" => %{"weId" => weid}}
 

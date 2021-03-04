@@ -40,6 +40,9 @@ defmodule SuperIssuerWeb.Router do
 
     live "/live/event", EventLive
 
+    live "/live/app", AppLive
+    live "/live/admin", AdminLive
+
     # live "/", PageLive, :index
   end
 
@@ -48,6 +51,7 @@ defmodule SuperIssuerWeb.Router do
     pipe_through :api
     get "/contracts", AppController, :get_contracts
     post "/contract/func", AppController, :interact_with_contract
+    post "/weid/create", AppController, :create_weid
   end
 
   # Enables LiveDashboard only for development

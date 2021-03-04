@@ -30,20 +30,9 @@
     </div>
   <% end %>
 </div>
-
   <%= if Plug.Conn.get_session(@conn, :current_user_id) do %>
-    <%= live_render(@conn, SuperIssuerWeb.EvidencerLive) %>
-    <!--<%= button("add evidence",
-    to: "live/evidence",
-    method: :get)%>-->
-    <br>
-    <%= button("add contract",
-      to: "live/contract",
-      method: :get)%>
-    <br>
-    <%= button("add credential",
-      to: "live/credential/new",
-      method: :get)%>
+    <%= live_render(@conn, SuperIssuerWeb.AppLive) %>
+
   <% end %>
 
 
