@@ -37,8 +37,12 @@ defmodule Crypto do
   end
 
   def kec(data) do
-    {:ok, hash} = :ksha3.hash(256, data)
-    hash
+    # {:ok, hash} =  :keccakf1600_sha3.hash(:sha256, data, 32)
+    # :keccakf1600_sha3.hash(:sha3_256, data)
+    # {:ok, hash} = :ksha3.hash(256, data)
+    # hash
+
+    ExSha3.keccak_256(data)
   end
 
   def encrypt_key(key) do
