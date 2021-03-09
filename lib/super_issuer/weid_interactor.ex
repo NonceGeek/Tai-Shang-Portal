@@ -191,5 +191,6 @@ defmodule SuperIssuer.WeidInteractor do
   defp handle_result({:ok, %{"errorMessage" => error_msg}}), do: {:error, error_msg}
 
   def get_weid_node(%{config: %{"weid" => node}}), do: node
+  def get_weid_node(%{config: %{weid: node}}), do: node
   def get_weid_node(_else), do: :error
 end
