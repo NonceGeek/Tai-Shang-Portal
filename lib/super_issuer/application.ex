@@ -4,6 +4,11 @@ defmodule SuperIssuer.Application do
   @moduledoc false
 
   use Application
+  import Supervisor.Spec
+
+  alias SuperIssuer.ChainSyncer
+
+  @default_chain_name "WeLightTest"
 
   def start(_type, _args) do
     children = [
@@ -14,9 +19,11 @@ defmodule SuperIssuer.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: SuperIssuer.PubSub},
       # Start the Endpoint (http/https)
-      SuperIssuerWeb.Endpoint
+      SuperIssuerWeb.Endpoint,
       # Start a worker by calling: SuperIssuer.Worker.start_link(arg)
       # {SuperIssuer.Worker, arg}
+
+      worker(ChainSyncer, [@default_chain_name])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

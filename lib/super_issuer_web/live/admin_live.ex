@@ -49,6 +49,7 @@ defmodule SuperIssuerWeb.AdminLive do
     contract =
       contract
       |> StructTranslater.to_atom_struct()
+      |> Map.put(:abi, Poison.decode!(contract.abi))
       |> Contract.handle()
 
     case Contract.create(contract) do

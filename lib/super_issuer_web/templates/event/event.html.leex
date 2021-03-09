@@ -12,7 +12,9 @@
             区块高度：
             <a target="_blank" href= <%= "https://weimang.cyberemd.com/explorer/#/transaction/transactionDetail?pkHash=#{event.tx.block.block_hash}"%>>
             <%= event.tx.block.block_height%>
-            </a>
+            </a><br>
+            时间：
+            <%= DateTime.from_unix!(event.tx.block.timestamp, :millisecond) %>
         </div>
         <div class="card-body">
             <!-- <%= inspect(event) %> -->
@@ -31,8 +33,8 @@
                     <tbody>
                         <%= for {key, value} <-  event.obvious_event.args do %>
                             <tr>
-                            <th scope="row"><%= "#{key}"%></th>
-                            <td><%= "#{inspect(value)}"%></td>
+                            <th scope="row" style="width: 10px;"><%= "#{key}"%></th>
+                            <td style="word-wrap:break-word;word-break:break-all;"><%= "#{value}"%></td>
                             </tr>
                         <% end %>
 

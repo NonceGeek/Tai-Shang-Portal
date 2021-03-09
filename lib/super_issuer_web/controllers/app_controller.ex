@@ -1,5 +1,5 @@
 defmodule SuperIssuerWeb.AppController do
-  alias SuperIssuer.{AppCenter, App, Chain, Contract, EvidenceHandler, WeidInteractor}
+  alias SuperIssuer.{AppCenter, App, Chain, Contract, ContractTemplate, EvidenceHandler, WeidInteractor}
   use SuperIssuerWeb, :controller
 
   @resp_success %{
@@ -51,12 +51,15 @@ defmodule SuperIssuerWeb.AppController do
 
   def get_contracts_info(contracts) do
     Enum.map(contracts, fn contract->
-      funcs = Contract.get_funcs(contract)
-      events = Contract.get_events(contract)
+      contract
+        = %{contract_template: c_tem}
+        = Contract.preload(contract)
+      funcs = ContractTemplate.get_funcs(c_tem)
+      events = ContractTemplate.get_events(c_tem)
       %{}
       |> Map.put(:id, contract.id)
       |> Map.put(:init_params, contract.init_params)
-      |> Map.put(:type,  contract.type)
+      |> Map.put(:type,  c_tem.name)
       |> Map.put(:description, contract.description)
       |> Map.put(:funcs, funcs)
       |> Map.put(:events, events)
@@ -96,7 +99,7 @@ defmodule SuperIssuerWeb.AppController do
 
   def get_payload(chain, contract, func_name, payload) do
     try do
-      case contract.type do
+      case contract.contract_template.name do
         "Evidence" ->
           case func_name do
             "newEvidence" ->

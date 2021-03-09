@@ -41,13 +41,13 @@ defmodule SuperIssuer.Chain do
     Repo.get_by(Chain, id: ele)
   end
 
-  def create_chain(attrs \\ %{}) do
+  def create(attrs \\ %{}) do
     %Chain{}
     |> changeset(attrs)
     |> Repo.insert()
   end
 
-  def change_chain(%Chain{} = ele, attrs) do
+  def change(%Chain{} = ele, attrs) do
     ele
     |> changeset(attrs)
     |> Repo.update()
@@ -61,5 +61,6 @@ defmodule SuperIssuer.Chain do
   def changeset(%Chain{} = ele, attrs) do
     ele
     |> cast(attrs, [:name, :min_height, :is_enabled, :adapter, :config, :height_now])
+    |> unique_constraint(:name)
   end
 end

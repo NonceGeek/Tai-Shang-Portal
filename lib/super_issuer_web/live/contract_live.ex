@@ -2,7 +2,7 @@ defmodule SuperIssuerWeb.ContractLive do
 
   use Phoenix.LiveView
   alias SuperIssuerWeb.ContractView
-  alias SuperIssuer.{User, Contract}
+  alias SuperIssuer.{User, Contract, Chain, ContractTemplate}
 
   def render(assigns) do
     ContractView.render("contract.html", assigns)
@@ -22,7 +22,26 @@ defmodule SuperIssuerWeb.ContractLive do
       socket
       |> do_mount(user)
       |> assign(contracts: contracts)
+      |> init_chain()
     }
+  end
+
+  def init_chain(socket) do
+    chains =
+      Chain.get_all()
+      |> Enum.map(fn %{id: id, name: name} ->
+        {name, id}
+      end)
+      |> Enum.into(%{})
+    types =
+      ContractTemplate.get_all()
+      |> Enum.map(fn %{id: id, name: name} ->
+        {name, id}
+      end)
+      |> Enum.into(%{})
+    socket
+    |> assign(chains: chains)
+    |> assign(types: types)
   end
 
   def mount(_params, _, socket) do
@@ -43,12 +62,23 @@ defmodule SuperIssuerWeb.ContractLive do
     |> redirect(to: "/")
   end
 
-  def handle_event("save", %{"contract" => contract}, socket) do
-
+  def handle_event("save",
+    %{
+      "contract" =>
+      %{
+        "init_params" => init_params,
+        "type" => c_tem_id,
+        "the_chain" => chain_id,
+        } = contract,
+      } = payload,
+    socket) do
     contract =
       contract
       |> StructTranslater.to_atom_struct()
-      |> Contract.handle()
+      |> Map.put(:init_params, Poison.decode!(init_params))
+      |> Map.put(:chain_id, String.to_integer(chain_id))
+      |> Map.put(:contract_template_id, String.to_integer(c_tem_id))
+      # |> Contract.handle()
 
     case Contract.create(contract) do
       {:ok, contract} ->
@@ -63,7 +93,11 @@ defmodule SuperIssuerWeb.ContractLive do
       }
     end
   end
-  def handle_event(sth, payload, socket) do
+  def handle_event("save", payload, socket) do
+    IO.puts inspect payload
+    {:noreply, socket}
+  end
+  def handle_event(_others, payload, socket) do
     {:noreply, socket}
   end
 

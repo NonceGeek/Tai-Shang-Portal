@@ -7,6 +7,7 @@ defmodule SuperIssuer.Block do
   schema "block" do
     field :block_height, :integer
     field :block_hash, :string
+    field :timestamp, :integer
     belongs_to :chain, Chain
     has_many :tx, Tx
     timestamps()
@@ -33,6 +34,6 @@ defmodule SuperIssuer.Block do
   @doc false
   def changeset(%Block{} = ele, attrs) do
     ele
-    |> cast(attrs, [:block_height, :block_hash, :chain_id])
+    |> cast(attrs, [:block_height, :block_hash, :chain_id, :timestamp])
   end
 end

@@ -17,6 +17,7 @@ defmodule SuperIssuer.Chain.FiscoBcos do
       |> filter_txs()
 
     Repo.transaction(fn ->
+      IO.puts inspect block_formatted
       res =
         block_formatted
         |> Map.put(:tx, txs_formatted)
@@ -38,18 +39,19 @@ defmodule SuperIssuer.Chain.FiscoBcos do
     |> do_handle_block(chain)
   end
 
-  def do_handle_block(%{number: block_height, hash: block_hash, transactions: txs}, %{id: chain_id}) do
+  def do_handle_block(%{number: block_height, hash: block_hash, transactions: txs, timestamp: timestamp}, %{id: chain_id}) do
     block_formatted =
       block_height
-      |> build_block(block_hash, chain_id)
+      |> build_block(block_hash, chain_id, timestamp)
     {block_formatted, txs}
   end
 
-  def build_block(block_height, block_hash, chain_id) do
+  def build_block(block_height, block_hash, chain_id, timestamp) do
     %Block{
       block_height: block_height,
       block_hash: block_hash,
-      chain_id: chain_id
+      chain_id: chain_id,
+      timestamp: timestamp
     }
   end
 

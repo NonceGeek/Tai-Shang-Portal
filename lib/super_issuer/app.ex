@@ -71,7 +71,7 @@ defmodule SuperIssuer.App do
   @doc false
   def changeset(%App{} = app, attrs) do
     app
-    |> cast(attrs, [:name, :encrypted_secret_key, :description, :contract_id_list, :url])
+    |> cast(attrs, [:name, :encrypted_secret_key, :description, :contract_id_list, :url, :weid_permission, :user_id])
     |> unique_constraint(:name)
     |> validate_required([:name, :encrypted_secret_key])
     |> update_change(:encrypted_secret_key, &Crypto.encrypt_key/1)

@@ -2,19 +2,27 @@ defmodule SuperIssuer.EvidenceHandler do
   @moduledoc """
     handle with Evidence Contract
   """
-  alias SuperIssuer.{Evidence}
+  alias SuperIssuer.{Evidence, ContractTemplate}
   alias SuperIssuer.Ethereum.EventLog
 
-  @evi_bin FileHandler.read(:bin, "contract/evidence/evidence_fac.bin")
-  @evi_fac_abi FileHandler.read(:json, "contract/evidence/evidence_fac.abi")
-  @evi_abi FileHandler.read(:json, "contract/evidence/evidence.abi")
-  @evi_full_abi @evi_fac_abi ++ @evi_abi
   @func %{
     new_evi: "newEvidence",
     get_evi: "getEvidence",
     add_sig: "addSignatures",
     get_signers: "getSigners",
   }
+
+  def get_abi() do
+    "Evidence"
+    |> ContractTemplate.get_by_name()
+    |> Map.get(:abi)
+  end
+
+  def get_bin() do
+    "Evidence"
+    |> ContractTemplate.get_by_name()
+    |> Map.get(:bin)
+  end
 
   def new_evidence(chain, signer, contract, evidence) do
     {:ok, key, tx_id} =
@@ -42,7 +50,7 @@ defmodule SuperIssuer.EvidenceHandler do
       evi_preloaded.contract.addr,
       @func.add_sig,
       [evi.key],
-      @evi_full_abi
+      get_abi()
     )
   end
 
@@ -54,7 +62,7 @@ defmodule SuperIssuer.EvidenceHandler do
       evi_preloaded.contract.addr,
       @func.get_evi,
       [evi.key],
-      @evi_full_abi
+      get_abi()
     )
   end
 
@@ -66,7 +74,7 @@ defmodule SuperIssuer.EvidenceHandler do
         contract_addr,
         @func.new_evi,
         [evidence],
-        @evi_full_abi
+        get_abi()
       )
     key =
       logs
@@ -83,7 +91,7 @@ defmodule SuperIssuer.EvidenceHandler do
         contract_addr,
         @func.get_signers,
         [],
-        @evi_full_abi
+        get_abi()
       )
     {:ok, signer_list}
   end
@@ -92,8 +100,8 @@ defmodule SuperIssuer.EvidenceHandler do
     WeBaseInteractor.deploy(
       chain,
       deployer_addr,
-      @evi_bin,
-      @evi_full_abi,
+      get_bin(),
+      get_abi(),
       [signer_list]
     )
   end
@@ -102,6 +110,6 @@ defmodule SuperIssuer.EvidenceHandler do
     data: data,
     topics: topics
   }) do
-    EventLog.decode(@evi_full_abi, topics, data)
+    EventLog.decode(get_abi(), topics, data)
   end
 end

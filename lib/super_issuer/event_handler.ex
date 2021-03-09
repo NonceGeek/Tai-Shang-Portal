@@ -5,7 +5,7 @@ defmodule SuperIssuer.EventHandler do
 
   def handle_event_by_contract(%Event{} = event) do
     event
-    |> Repo.preload(tx: :contract)
+    |> Repo.preload(tx: [contract: :contract_template])
     |> do_handle_event_by_contract()
   end
 
@@ -30,7 +30,7 @@ defmodule SuperIssuer.EventHandler do
     }
   """
   def do_handle_event_by_contract(event_preloaded) do
-    abi = event_preloaded.tx.contract.abi
+    abi = event_preloaded.tx.contract.contract_template.abi
     obvious_event = EventLog.decode(
       abi,
       event_preloaded.topics,

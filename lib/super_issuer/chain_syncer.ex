@@ -13,13 +13,25 @@ defmodule SuperIssuer.ChainSyncer do
   # +-----------+
   # | GenServer |
   # +-----------+
-  def start_link(chain) do
-    GenServer.start_link(__MODULE__, chain, name: name(chain))
+  def start_link(chain_name) do
+    GenServer.start_link(__MODULE__, chain_name, name: :"#{chain_name}_syncer")
   end
 
-  defp name(%{name: name}), do: :"#{name}_syncer"
+  def init(chain_name) do
+    chain = Chain.get_by_name(chain_name)
+    do_init(chain)
+  end
 
-  def init(chain) do
+
+  def do_init(chain) when is_nil(chain) do
+    payload = "do_nothing"
+
+    Logger.info(payload)
+    {:ok, payload}
+  end
+  def do_init({:error, error_log}), do: {:ok, error_log}
+
+  def do_init(chain) do
     chain = Chain.preload(chain)
     send(self(), :pull)
     {:ok, chain}
@@ -44,7 +56,7 @@ defmodule SuperIssuer.ChainSyncer do
     {:ok, latest_height} = adapter.get_best_block_height(chain)
     height_now = Chain.get_height_now(chain)
     do_sync_chain(chain, adapter, latest_height, height_now)
-    Chain.change_chain(chain, %{height_now: latest_height})
+    Chain.change(chain, %{height_now: latest_height})
   end
 
   def do_sync_chain(_chain, _adapter, latest_height, height_now)

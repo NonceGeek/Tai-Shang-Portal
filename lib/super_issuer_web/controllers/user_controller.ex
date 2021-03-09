@@ -43,9 +43,9 @@ defmodule SuperIssuerWeb.UserController do
       Map.put(user_params, "group", 0)
     {chain, user_params_restructured}
   end
-  def do_create({chain, user_params_restructured}) do
+  def do_create({chain, %{"weid" => weid} = user_params_restructured}) do
     with {:ok, user} <- User.create_user(user_params_restructured),
-         {:ok, _info} <- weid_exist?(chain, user_params_restructured),
+         {:ok, _info} <- weid_exist?(chain, weid),
          {:ok, weid_params} <- restructure_params(user_params_restructured, user),
          {:ok, _weidentity} <- WeIdentity.create_weidentity(weid_params) do
         {:ok, "user_and_weid_create_finished"}

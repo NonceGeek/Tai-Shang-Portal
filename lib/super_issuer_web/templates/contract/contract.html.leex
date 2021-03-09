@@ -9,8 +9,7 @@
     <%= error_tag f, :addr %>
 
     <%= label f, :type %>
-    <%= text_input f, :type %>
-    <%= error_tag f, :type %>
+    <%= select f, :type, @types %>
 
     <%= label f, :description %>
     <%= text_input f, :description %>
@@ -23,6 +22,9 @@
     <%= label f, :creater %>
     <%= text_input f, :creater %>
     <%= error_tag f, :creater %>
+
+    <%= label f, :chain %>
+    <%= select f, :the_chain, @chains %>
     <div>
         <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

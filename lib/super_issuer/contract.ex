@@ -1,57 +1,18 @@
 defmodule SuperIssuer.Contract do
   use Ecto.Schema
   import Ecto.Changeset
-  alias SuperIssuer.{Chain, Contract, Evidence, EvidenceHandler}
+  alias SuperIssuer.{Chain, Contract, Evidence, EvidenceHandler, ContractTemplate}
   alias SuperIssuer.Repo
-  alias SuperIssuer.Ethereum.ABI
 
   schema "contract" do
     field :addr, :string
-    field :type, :string
     field :description, :string
     field :creater, :string
     field :init_params, :map
-    field :abi, {:array, :map}
     belongs_to :chain, Chain
+    belongs_to :contract_template, ContractTemplate
     has_many :evidence, Evidence
     timestamps()
-  end
-
-  def get_funcs(%{abi: abi}) do
-    abi
-    |> ABI.get_funcs()
-    |> Enum.map(fn func ->
-      struct_to_map(:func, func)
-    end)
-  end
-
-  def get_events(%{abi: abi}) do
-    abi
-    |> ABI.get_events()
-    |> Enum.map(fn event ->
-      struct_to_map(:event, event)
-    end)
-  end
-
-  def struct_to_map(:func, ele) do
-    ele = Map.from_struct(ele)
-    inputs = Enum.map(ele.inputs, fn arg ->
-      Map.from_struct(arg)
-    end)
-    outputs = Enum.map(ele.outputs, fn arg ->
-      Map.from_struct(arg)
-    end)
-    ele
-    |> Map.put(:inputs, inputs)
-    |> Map.put(:outputs, outputs)
-  end
-
-  def struct_to_map(:event, ele) do
-    ele = Map.from_struct(ele)
-    args = Enum.map(ele.args, fn arg ->
-      Map.from_struct(arg)
-    end)
-    Map.put(ele, :args, args)
   end
   @doc """
     handle is the func when init
@@ -70,7 +31,7 @@ defmodule SuperIssuer.Contract do
   end
 
   def preload(contract) do
-    Repo.preload(contract, :chain)
+    Repo.preload(contract, [:chain, :contract_template])
   end
 
   def handle(contract, _init_params) do
@@ -115,7 +76,7 @@ defmodule SuperIssuer.Contract do
   @doc false
   def changeset(%Contract{} = contract, attrs) do
     contract
-    |> cast(attrs, [:addr, :type, :description, :creater, :init_params, :abi])
+    |> cast(attrs, [:addr, :description, :creater, :init_params, :contract_template_id, :chain_id])
     |> unique_constraint(:description)
   end
 end
