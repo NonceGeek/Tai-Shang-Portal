@@ -47,7 +47,7 @@ defmodule SuperIssuerWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api/v1", SuperIssuerWeb do
+  scope "/welight/api/v1", SuperIssuerWeb do
     pipe_through :api
     get "/contracts", AppController, :get_contracts
     post "/contract/func", AppController, :interact_with_contract

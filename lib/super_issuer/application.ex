@@ -8,7 +8,7 @@ defmodule SuperIssuer.Application do
 
   alias SuperIssuer.ChainSyncer
 
-  @default_chain_name "WeLightTest"
+  @default_chain_name System.get_env("default_chain_name")
 
   def start(_type, _args) do
     children = [

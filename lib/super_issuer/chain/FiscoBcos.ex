@@ -13,11 +13,10 @@ defmodule SuperIssuer.Chain.FiscoBcos do
 
     txs_formatted =
       raw_txs
-      |> handle_txs(chain)
+      |> handle_txs(chain, height)
       |> filter_txs()
 
     Repo.transaction(fn ->
-      IO.puts inspect block_formatted
       res =
         block_formatted
         |> Map.put(:tx, txs_formatted)
@@ -40,12 +39,15 @@ defmodule SuperIssuer.Chain.FiscoBcos do
   end
 
   def do_handle_block(%{number: block_height, hash: block_hash, transactions: txs, timestamp: timestamp}, %{id: chain_id}) do
+    timestamp_handled = handle_timestamp(timestamp)
     block_formatted =
       block_height
-      |> build_block(block_hash, chain_id, timestamp)
+      |> build_block(block_hash, chain_id, timestamp_handled)
     {block_formatted, txs}
   end
 
+  def handle_timestamp(timestamp) when is_binary(timestamp), do: String.to_integer(timestamp)
+  def handle_timestamp(timestamp), do: timestamp
   def build_block(block_height, block_hash, chain_id, timestamp) do
     %Block{
       block_height: block_height,
@@ -55,11 +57,11 @@ defmodule SuperIssuer.Chain.FiscoBcos do
     }
   end
 
-  def handle_txs(txs, chain) do
+  def handle_txs(txs, chain, height) do
     Enum.map(txs, fn %{hash: tx_hash} ->
       chain
       |> WeBaseInteractor.get_transaction_receipt(tx_hash)
-      |> handle_receipt()
+      |> handle_receipt(height)
     end)
   end
 
@@ -90,16 +92,21 @@ defmodule SuperIssuer.Chain.FiscoBcos do
     end
   end
 
-  def handle_receipt({:ok, raw_tx_receipt}) do
+  def handle_receipt({:ok, raw_tx_receipt}, height) do
     raw_tx_receipt
     |> StructTranslater.to_atom_struct()
-    |> do_handle_receipt()
+    |> do_handle_receipt(height)
   end
-  def do_handle_receipt(%{from: from_addr, to: to_addr, transactionHash: tx_hash, logs: logs, blockNumber: block_height}) do
+  def do_handle_receipt(%{from: from_addr, to: to_addr, transactionHash: tx_hash, logs: logs}, height) do
     tx = build_tx(from_addr, to_addr, tx_hash)
     events =
-      Enum.map(logs, fn %{address: addr, data: data, logIndex: log_index,topics: topics} ->
-        build_event(addr, data, log_index, topics, block_height)
+      Enum.map(logs, fn payload ->
+        case payload do
+          %{address: addr, data: data, topics: topics, logIndex: log_index} ->
+            build_event(addr, data, topics, height, log_index)
+          %{address: addr, data: data, topics: topics} ->
+            build_event(addr, data, topics, height)
+        end
       end)
     Map.put(tx, :event, events)
   end
@@ -112,13 +119,22 @@ defmodule SuperIssuer.Chain.FiscoBcos do
     }
   end
 
-  def build_event(addr, data, log_index, topics, block_height) do
+  def build_event(addr, data, topics, height, log_index) do
     %Event{
       address: addr,
       data: data,
       topics: topics,
       log_index: log_index,
-      block_height: block_height
+      block_height: height
+    }
+  end
+
+  def build_event(addr, data, topics, height) do
+    %Event{
+      address: addr,
+      data: data,
+      topics: topics,
+      block_height: height
     }
   end
 
