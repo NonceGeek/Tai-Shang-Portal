@@ -3,7 +3,7 @@ defmodule SuperIssuer.Repo.Migrations.UpdateWeidWithPrivkey do
 
   def change do
     alter table :weidentity do
-      add :encrypted_privkey, :string
+      add :encrypted_privkey, :binary
       add :type, :string
     end
   end

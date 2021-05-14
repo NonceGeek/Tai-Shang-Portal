@@ -5,7 +5,7 @@ defmodule SuperIssuer.WeIdentity do
 
   schema "weidentity" do
     field :weid, :string
-    field :encrypted_privkey, :string
+    field :encrypted_privkey, :binary
     field :type, :string
     field :description, :string
     belongs_to :user, User
