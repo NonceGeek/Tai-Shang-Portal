@@ -105,20 +105,35 @@ defmodule SuperIssuerWeb.AppController do
         "Evidence" ->
           case func_name do
             "newEvidence" ->
-              {:ok, evi} =
-                EvidenceHandler.new_evidence(
-                  chain,
-                  payload.signer,
-                  contract,
-                  payload.evidence)
-              evi_struct = StructTranslater.struct_to_map(evi)
-
-              Map.put(@resp_success, :result, evi_struct)
+              new_evi(chain, contract, payload)
           end
       end
     catch
       error ->
         Map.put(@resp_failure, :result, inspect(error))
+    end
+  end
+
+  def new_evi(
+    chain,
+    contract,
+    %{
+      evidence: evi,
+      signer: signer
+    }) do
+    with :ok <- EvidenceHandler.evi_valid?(evi) do
+
+      {:ok, evi} =
+        EvidenceHandler.new_evidence(
+          chain,
+          signer,
+          contract,
+          evi)
+      evi_struct = StructTranslater.struct_to_map(evi)
+      Map.put(@resp_success, :result, evi_struct)
+    else
+      _ ->
+      Map.put(@resp_failure, :result, "evidence is not regular")
     end
   end
 

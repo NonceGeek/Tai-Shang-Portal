@@ -114,4 +114,29 @@ defmodule SuperIssuer.EvidenceHandler do
   }) do
     EventLog.decode(get_abi(), topics, data)
   end
+
+  def evi_valid?(evidence) do
+    evi =
+      evidence
+      |> String.replace("\'","\"")
+      |> Poison.decode!()
+      |> StructTranslater.to_atom_struct()
+
+    with {:ok, did} <- Map.fetch(evi, :operator),
+      true <- do_did_valid?(did),
+      {:ok, _app_id} <- Map.fetch(evi, :app_id) do
+        :ok
+      else
+        _ ->
+        :error
+    end
+
+  end
+
+  def do_did_valid?(did) do
+    did
+    |> String.split(":")
+    |> Enum.fetch!(0)
+    |> Kernel.==("did")
+  end
 end
