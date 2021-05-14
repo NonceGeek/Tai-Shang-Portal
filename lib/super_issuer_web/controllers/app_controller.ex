@@ -148,7 +148,7 @@ defmodule SuperIssuerWeb.AppController do
   def do_create_weid({:ok, _app}, %{chain_id: chain_id}, conn) do
     chain = Chain.get_by_id(chain_id)
     {:ok, weid} = WeidInteractor.create_weid(chain)
-    {:ok, weid} =
+    {:ok, _weid} =
       weid
       |> build_weid_params()
       |> WeIdentity.create()
@@ -164,6 +164,11 @@ defmodule SuperIssuerWeb.AppController do
     priv =
       weid
       |> fetch_priv(@weid_rest_service_path)
+      # to binary
+      |> String.to_integer()
+      |> Integer.to_string(16)
+      |> Base.decode16!
+
     %{weid: weid, type: "LocalWeidRestService", encrypted_privkey: priv}
   end
 
@@ -178,5 +183,6 @@ defmodule SuperIssuerWeb.AppController do
       |> String.split(":")
       |> Enum.fetch!(-1)
   end
+
 
 end
