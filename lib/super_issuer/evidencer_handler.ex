@@ -116,15 +116,15 @@ defmodule SuperIssuer.EvidenceHandler do
   end
 
   def evi_valid?(evidence) do
-    evi =
+    evi_handled =
       evidence
       |> String.replace("\'","\"")
-      |> Poison.decode!()
-      |> StructTranslater.to_atom_struct()
 
-    with {:ok, did} <- Map.fetch(evi, :operator),
+
+    with {:ok, evi_decoded} <- Poison.decode(evi_handled),
+      {:ok, did} <- Map.fetch(evi_decoded, "operator"),
       true <- do_did_valid?(did),
-      {:ok, _app_id} <- Map.fetch(evi, :app_id) do
+      {:ok, _app_id} <- Map.fetch(evi_decoded, "app_id") do
         :ok
       else
         _ ->
