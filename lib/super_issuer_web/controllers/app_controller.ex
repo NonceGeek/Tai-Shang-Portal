@@ -1,6 +1,8 @@
 defmodule SuperIssuerWeb.AppController do
-  alias SuperIssuer.{AppCenter, App, Chain, Contract, ContractTemplate, EvidenceHandler, WeidInteractor}
+  alias SuperIssuer.{WeIdentity, AppCenter, App, Chain, Contract, ContractTemplate, EvidenceHandler, WeidInteractor}
   use SuperIssuerWeb, :controller
+
+  @weid_rest_service_path Application.get_env(:super_issuer, :weid_rest_service_path)
 
   @resp_success %{
     error_code: 0,
@@ -146,6 +148,10 @@ defmodule SuperIssuerWeb.AppController do
   def do_create_weid({:ok, _app}, %{chain_id: chain_id}, conn) do
     chain = Chain.get_by_id(chain_id)
     {:ok, weid} = WeidInteractor.create_weid(chain)
+    {:ok, weid} =
+      weid
+      |> build_weid_params()
+      |> WeIdentity.create()
     payload = Map.put(@resp_success, :result, weid)
     json(conn, payload)
   end
@@ -153,5 +159,29 @@ defmodule SuperIssuerWeb.AppController do
   def do_create_weid({:error, info}, _params_struct, conn) do
     json(conn, %{error: info})
   end
+
+  def build_weid_params(weid) do
+    priv =
+      weid
+      |> fetch_priv(@weid_rest_service_path)
+      # to binary
+      |> String.to_integer()
+      |> Integer.to_string(16)
+      |> Base.decode16!
+    %{weid: weid, type: "LocalWeidRestService", encrypted_privkey: priv}
+  end
+
+  def fetch_priv(weid, weid_rest_service_path) do
+    file_name = translate_to_file_name(weid)
+    full_path = weid_rest_service_path <>(file_name)
+    FileHandler.read(:bin, full_path)
+  end
+
+  def translate_to_file_name(weid) do
+      weid
+      |> String.split(":")
+      |> Enum.fetch!(-1)
+  end
+
 
 end

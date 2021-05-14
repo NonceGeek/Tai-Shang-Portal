@@ -5,6 +5,8 @@ defmodule SuperIssuer.WeIdentity do
 
   schema "weidentity" do
     field :weid, :string
+    field :encrypted_privkey, :string
+    field :type, :string
     field :description, :string
     belongs_to :user, User
     belongs_to :chain, Chain
@@ -16,13 +18,13 @@ defmodule SuperIssuer.WeIdentity do
     Repo.get_by(WeIdentity, weid: ele)
   end
 
-  def create_weidentity(attrs \\ %{}) do
+  def create(attrs \\ %{}) do
     %WeIdentity{}
     |> WeIdentity.changeset(attrs)
     |> Repo.insert()
   end
 
-  def change_weidentity(%WeIdentity{} = ele, attrs) do
+  def change(%WeIdentity{} = ele, attrs) do
     ele
     |> changeset(attrs)
     |> Repo.update()
@@ -35,6 +37,7 @@ defmodule SuperIssuer.WeIdentity do
   @doc false
   def changeset(%WeIdentity{} = ele, attrs) do
     ele
-    |> cast(attrs, [:weid, :description, :user_id])
+    |> cast(attrs, [:weid, :description, :user_id, :encrypted_privkey, :type])
+    |> update_change(:encrypted_privkey, &Crypto.encrypt_key/1)
   end
 end

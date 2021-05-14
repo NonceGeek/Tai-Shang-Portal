@@ -2,10 +2,18 @@ defmodule Crypto do
   @moduledoc """
     Crypto Lib
   """
-  @secret_key System.get_env("secret_key")
+
+  @secret_key Application.get_env(:super_issuer, :secret_key)
 
   def sha256(data), do: :crypto.hash(:sha256, data)
   def ripemd160(data), do: :crypto.hash(:ripemd160, data)
+  @spec double_sha256(
+          binary
+          | maybe_improper_list(
+              binary | maybe_improper_list(any, binary | []) | byte,
+              binary | []
+            )
+        ) :: binary
   def double_sha256(data), do: data |> sha256 |> sha256
 
   def secp256k1_verify(data, sig, pubkey) do

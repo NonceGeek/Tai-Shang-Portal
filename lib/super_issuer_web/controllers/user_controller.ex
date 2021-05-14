@@ -47,7 +47,7 @@ defmodule SuperIssuerWeb.UserController do
     with {:ok, user} <- User.create_user(user_params_restructured),
          {:ok, _info} <- weid_exist?(chain, user_params_restructured),
          {:ok, weid_params} <- restructure_params(user_params_restructured, user),
-         {:ok, _weidentity} <- WeIdentity.create_weidentity(weid_params) do
+         {:ok, _weidentity} <- WeIdentity.create(weid_params) do
         {:ok, "user_and_weid_create_finished"}
     else
       {:error, error_payload} ->

@@ -73,7 +73,7 @@ defmodule SuperIssuer.ContractTemplate do
   end
 
   def changeset(%Ele{} = ele) do
-    Contract.changeset(ele, %{})
+    changeset(ele, %{})
   end
 
   @doc false

@@ -30,6 +30,7 @@ defmodule SuperIssuer.EventHandler do
     }
   """
   def do_handle_event_by_contract(event_preloaded) do
+
     abi = event_preloaded.tx.contract.contract_template.abi
     obvious_event = EventLog.decode(
       abi,

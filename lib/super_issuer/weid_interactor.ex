@@ -6,6 +6,8 @@ defmodule SuperIssuer.WeidInteractor do
 
   """
 
+  require Logger
+
   @weid_path "/weid/api/"
   @path %{
     invoke: @weid_path <> "invoke",
@@ -51,8 +53,6 @@ defmodule SuperIssuer.WeidInteractor do
   end
 
   def get_weid_document(chain, weid) do
-    IO.puts inspect chain
-    IO.puts inspect weid
     node = get_weid_node(chain)
     body_get_weid_doc = %{@body_get_weid_doc | "functionArg" => %{"weId" => weid}}
 
