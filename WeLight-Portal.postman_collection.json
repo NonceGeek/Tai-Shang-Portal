@@ -2,32 +2,26 @@
 	"info": {
 		"_postman_id": "49b52209-775c-4a9f-b0da-9f98c637a531",
 		"name": "WeLight-Portal",
+		"description": "APIs about WeLight Portal.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "get_contracts",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": [
+			"name": "contract_interactor",
+			"item": [
 				{
 					"name": "get_contracts",
-					"originalRequest": {
+					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{host}}:{{httpport}}/api/v1/contracts?app_id=1&secret_key=fff",
-							"protocol": "http",
+							"raw": "{{host}}:{{http_port}}/welight/api/v1/contracts?app_id=1&secret_key={{secret_key}}",
 							"host": [
 								"{{host}}"
 							],
-							"port": "{{httpport}}",
+							"port": "{{http_port}}",
 							"path": [
+								"welight",
 								"api",
 								"v1",
 								"contracts"
@@ -39,63 +33,82 @@
 								},
 								{
 									"key": "secret_key",
-									"value": "fff"
+									"value": "{{secret_key}}"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "cache-control",
-							"value": "max-age=0, private, must-revalidate"
-						},
-						{
-							"key": "content-length",
-							"value": "2531"
-						},
-						{
-							"key": "content-type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "date",
-							"value": "Sat, 27 Feb 2021 01:47:33 GMT"
-						},
-						{
-							"key": "server",
-							"value": "Cowboy"
-						},
-						{
-							"key": "x-request-id",
-							"value": "Fmd3kJNc4YOI51IAAATE"
+							"name": "get_contracts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{http_port}}/api/v1/contracts?app_id=1&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"api",
+										"v1",
+										"contracts"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "cache-control",
+									"value": "max-age=0, private, must-revalidate"
+								},
+								{
+									"key": "content-length",
+									"value": "2531"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 27 Feb 2021 01:47:33 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "x-request-id",
+									"value": "Fmd3kJNc4YOI51IAAATE"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"description\": \"柏链存证合约\",\n        \"events\": [\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    }\n                ],\n                \"name\": \"addSignaturesEvent\"\n            }\n            // …………\n        ],\n        \"id\": 1,\n        \"init_params\": {\n            \"evidenceSigners\": [\n                \"0x085154d302b49577252c17c9fd7fad354347b596\"\n            ]\n        },\n        \"type\": \"Evidence\"\n    }\n]"
 						}
-					],
-					"cookie": [],
-					"body": "[\n    {\n        \"description\": \"柏链存证合约\",\n        \"events\": [\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    }\n                ],\n                \"name\": \"addSignaturesEvent\"\n            },\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    },\n                    {\n                        \"indexed\": false,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"newSignaturesEvent\"\n            },\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    },\n                    {\n                        \"indexed\": false,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"errorNewSignaturesEvent\"\n            },\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    },\n                    {\n                        \"indexed\": false,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"errorAddSignaturesEvent\"\n            },\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    }\n                ],\n                \"name\": \"addRepeatSignaturesEvent\"\n            },\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    },\n                    {\n                        \"indexed\": false,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"errorRepeatSignaturesEvent\"\n            },\n            {\n                \"args\": [\n                    {\n                        \"indexed\": false,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"newEvidenceEvent\"\n            }\n        ],\n        \"funcs\": [\n            {\n                \"inputs\": [],\n                \"name\": \"getEvidence\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"string\"\n                    },\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address[]\"\n                    },\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address[]\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [],\n                \"name\": \"addSignatures\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"bool\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [],\n                \"name\": \"getSigners\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address[]\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [],\n                \"name\": \"factoryAddr\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"CallVerify\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"bool\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"addSignatures\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"bool\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"index\",\n                        \"type\": \"uint256\"\n                    }\n                ],\n                \"name\": \"getSigner\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"getEvidence\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"string\"\n                    },\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address[]\"\n                    },\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address[]\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"addr\",\n                        \"type\": \"address\"\n                    }\n                ],\n                \"name\": \"verify\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"bool\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [],\n                \"name\": \"getSigners\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address[]\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"evi\",\n                        \"type\": \"string\"\n                    }\n                ],\n                \"name\": \"newEvidence\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"address\"\n                    }\n                ]\n            },\n            {\n                \"inputs\": [],\n                \"name\": \"getSignersSize\",\n                \"outputs\": [\n                    {\n                        \"indexed\": null,\n                        \"name\": \"\",\n                        \"type\": \"uint256\"\n                    }\n                ]\n            }\n        ],\n        \"id\": 1,\n        \"init_params\": {\n            \"evidenceSigners\": [\n                \"0x085154d302b49577252c17c9fd7fad354347b596\"\n            ]\n        },\n        \"type\": \"Evidence\"\n    }\n]"
-				}
-			]
-		},
-		{
-			"name": "interact_with_contract",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": [
+					]
+				},
 				{
 					"name": "interact_with_contract",
-					"originalRequest": {
+					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"contract_id\": 1,\n    \"func\": \"newEvidence\",\n    \"params\": {\n        \"signer\": \"0x085154d302b49577252c17c9fd7fad354347b596\",\n        \"evidence\": \"{}\"\n    }\n}",
+							"raw": "{\n    \"contract_id\": 1,\n    \"func\": \"newEvidence\",\n    \"params\": {\n        \"signer\": \"0xbf1731dc34c4c6f9cb034b9386931318f365bda3\",\n        \"evidence\": \"{'resource':'642e92efb79421734881b53e1e1b18b6','app_id':'1','operator':'did:weid:1:0xc67cfde9ea960c4eb449f84b3127770034174c8c','action':'behavior.study.plan.task'}\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -103,13 +116,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{httpport}}/api/v1/contract/func?app_id=1&secret_key=fff",
-							"protocol": "http",
+							"raw": "{{host}}:{{httpport}}/welight/api/v1/contract/func?app_id=1&secret_key={{secret_key}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{httpport}}",
 							"path": [
+								"welight",
 								"api",
 								"v1",
 								"contract",
@@ -122,58 +135,93 @@
 								},
 								{
 									"key": "secret_key",
-									"value": "fff"
+									"value": "{{secret_key}}"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "cache-control",
-							"value": "max-age=0, private, must-revalidate"
-						},
-						{
-							"key": "content-length",
-							"value": "429"
-						},
-						{
-							"key": "content-type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "date",
-							"value": "Sat, 27 Feb 2021 02:09:04 GMT"
-						},
-						{
-							"key": "server",
-							"value": "Cowboy"
-						},
-						{
-							"key": "x-request-id",
-							"value": "Fmd4vNuFwPsukywAAAMB"
+							"name": "interact_with_contract",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"contract_id\": 1,\n    \"func\": \"newEvidence\",\n    \"params\": {\n        \"signer\": \"0x085154d302b49577252c17c9fd7fad354347b596\",\n        \"evidence\": \"{'resource':'642e92efb79421734881b53e1e1b18b6','app_id':'1','operator':'did:weid:1:0xc67cfde9ea960c4eb449f84b3127770034174c8c','action':'behavior.study.plan.task'}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/contract/func?app_id=1&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"welight",
+										"api",
+										"v1",
+										"contract",
+										"func"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "cache-control",
+									"value": "max-age=0, private, must-revalidate"
+								},
+								{
+									"key": "content-length",
+									"value": "429"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 27 Feb 2021 02:09:04 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "x-request-id",
+									"value": "Fmd4vNuFwPsukywAAAMB"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"result\": {\n        \"contract_id\": 1,\n        \"description\": null,\n        \"id\": 10,\n        \"inserted_at\": \"2021-02-27T02:09:04\",\n        \"key\": \"0x65f702f98b05b96a47d40e7582a618fa15cc5dbd\",\n        \"owners\": [\n            \"0x085154d302b49577252c17c9fd7fad354347b596\"\n        ],\n        \"signers\": [\n            \"0x085154d302b49577252c17c9fd7fad354347b596\"\n        ],\n        \"tx_id\": \"0x855f072a0eae73e89352d91db62c4d1eed16dc57361c3b28a8b1c807faae0951\",\n        \"updated_at\": \"2021-02-27T02:09:04\",\n        \"value\": \"{}\"\n    },\n    \"error_code\": 0,\n    \"error_msg\": \"success\"\n}"
 						}
-					],
-					"cookie": [],
-					"body": "{\n    \"result\": {\n        \"contract_id\": 1,\n        \"description\": null,\n        \"id\": 10,\n        \"inserted_at\": \"2021-02-27T02:09:04\",\n        \"key\": \"0x65f702f98b05b96a47d40e7582a618fa15cc5dbd\",\n        \"owners\": [\n            \"0x085154d302b49577252c17c9fd7fad354347b596\"\n        ],\n        \"signers\": [\n            \"0x085154d302b49577252c17c9fd7fad354347b596\"\n        ],\n        \"tx_id\": \"0x855f072a0eae73e89352d91db62c4d1eed16dc57361c3b28a8b1c807faae0951\",\n        \"updated_at\": \"2021-02-27T02:09:04\",\n        \"value\": \"{}\"\n    },\n    \"error_code\": 0,\n    \"error_msg\": \"success\"\n}"
+					]
 				}
 			]
 		},
 		{
-			"name": "create_weid",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": [
+			"name": "weidentity_interactor",
+			"item": [
 				{
 					"name": "create_weid",
-					"originalRequest": {
+					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -186,13 +234,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{host}}:{{httpport}}/api/v1/weid/create?app_id=1&secret_key=fff",
-							"protocol": "http",
+							"raw": "{{host}}:{{httpport}}/welight/api/v1/weid/create?app_id=1&secret_key={{secret_key}}",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{httpport}}",
 							"path": [
+								"welight",
 								"api",
 								"v1",
 								"weid",
@@ -205,44 +253,105 @@
 								},
 								{
 									"key": "secret_key",
-									"value": "fff"
+									"value": "{{secret_key}}"
 								}
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "cache-control",
-							"value": "max-age=0, private, must-revalidate"
-						},
-						{
-							"key": "content-length",
-							"value": "103"
-						},
-						{
-							"key": "content-type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "date",
-							"value": "Sat, 27 Feb 2021 03:29:35 GMT"
-						},
-						{
-							"key": "server",
-							"value": "Cowboy"
-						},
-						{
-							"key": "x-request-id",
-							"value": "Fmd9IcbUL64XrFoAABVi"
+							"name": "create_weid",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"chain_id\": 1}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}:{{http_port}}welight/api/v1/weid/create?app_id=1&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}welight",
+									"path": [
+										"api",
+										"v1",
+										"weid",
+										"create"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "cache-control",
+									"value": "max-age=0, private, must-revalidate"
+								},
+								{
+									"key": "content-length",
+									"value": "103"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "date",
+									"value": "Sat, 27 Feb 2021 03:29:35 GMT"
+								},
+								{
+									"key": "server",
+									"value": "Cowboy"
+								},
+								{
+									"key": "x-request-id",
+									"value": "Fmd9IcbUL64XrFoAABVi"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": \"did:weid:1:0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\"\n}"
 						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": \"did:weid:1:0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\"\n}"
+					]
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
