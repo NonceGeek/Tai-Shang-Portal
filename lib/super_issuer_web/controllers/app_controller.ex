@@ -121,7 +121,8 @@ defmodule SuperIssuerWeb.AppController do
       evidence: evi,
       signer: signer
     }) do
-    with :ok <- EvidenceHandler.evi_valid?(evi) do
+    # !temp
+    # with :ok <- EvidenceHandler.evi_valid?(evi) do
 
       {:ok, evi} =
         EvidenceHandler.new_evidence(
@@ -131,10 +132,10 @@ defmodule SuperIssuerWeb.AppController do
           evi)
       evi_struct = StructTranslater.struct_to_map(evi)
       Map.put(@resp_success, :result, evi_struct)
-    else
-      _ ->
-      Map.put(@resp_failure, :result, "evidence is not regular")
-    end
+    # else
+    #   _ ->
+    #   Map.put(@resp_failure, :result, "evidence is not regular")
+    # end
   end
 
   # +----------+
