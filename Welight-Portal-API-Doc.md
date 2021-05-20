@@ -10,6 +10,12 @@ APIs about WeLight Portal.
   * [get_contracts](#1-get_contracts)
   * [interact_with_contract](#2-interact_with_contract)
 
+* [token_interactor](#token_interactor)
+
+  * [ft_get_balance](#1-ft_get_balance)
+  * [ft_get_token_info](#2-ft_get_token_info)
+  * [ft_transfer](#3-ft_transfer)
+
 * [weidentity_interactor](#weidentity_interactor)
 
   * [create_weid](#1-create_weid)
@@ -19,6 +25,8 @@ APIs about WeLight Portal.
 
 
 ## contract_interactor
+
+
 
 ### 1. get_contracts
 
@@ -195,6 +203,262 @@ URL: {{host}}:{{httpport}}/welight/api/v1/contract/func
 
 
 
+## token_interactor
+
+
+
+### 1. ft_get_balance
+
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: RAW
+URL: {{host}}:{{http_port}}/welight/api/v1/ft/get_balance
+```
+
+
+
+***Query params:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+| addr | {{addr}} |  |
+
+
+
+***More example Requests/Responses:***
+
+
+##### I. Example Request: get_balance
+
+
+
+***Query:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+| addr | {{addr}} |  |
+
+
+
+##### I. Example Response: get_balance
+```js
+{
+    "error_code": 0,
+    "error_msg": "success",
+    "result": {
+        "balance": 1000000
+    }
+}
+```
+
+
+***Status Code:*** 0
+
+<br>
+
+
+
+### 2. ft_get_token_info
+
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: {{host}}:{{http_port}}/welight/api/v1/ft/get_token_info
+```
+
+
+
+***Query params:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+***More example Requests/Responses:***
+
+
+##### I. Example Request: ft_get_token_info
+
+
+
+***Query:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+##### I. Example Response: ft_get_token_info
+```js
+{
+    "error_code": 0,
+    "error_msg": "success",
+    "result": {
+        "name": "LeeDuckGoToken",
+        "symbol": "LDGT",
+        "decimals": 2,
+        "description": "sth",
+        "Parent Token": "0x5e84ce01a3ecfb012e06b93d732eb4e1df047754",
+        "Total Supply": 100000000000
+    }
+}
+```
+
+
+***Status Code:*** 0
+
+<br>
+
+
+
+### 3. ft_transfer
+
+
+
+***Endpoint:***
+
+```bash
+Method: POST
+Type: RAW
+URL: {{host}}:{{http_port}}/welight/api/v1/ft/transfer
+```
+
+
+
+***Query params:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_addr | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+***Body:***
+
+```js        
+{
+    "from": "0x5e84ce01a3ecfb012e06b93d732eb4e1df047754",
+    "to":  "0x5e84ce01a3ecfb012e06b93d732eb4e1df047755",
+    "amount": 10000 
+    // Integer but not Float
+}
+```
+
+
+
+***More example Requests/Responses:***
+
+
+##### I. Example Request: transfer_success
+
+
+
+***Query:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+***Body:***
+
+```js        
+{
+    "from": "0x5e84ce01a3ecfb012e06b93d732eb4e1df047754",
+    "to":  "0x5e84ce01a3ecfb012e06b93d732eb4e1df047755",
+    "amount": 10000 
+    // Integer but not Float
+}
+```
+
+
+
+##### I. Example Response: transfer_success
+```js
+{
+    "error_code": 0,
+    "error_msg": "success",
+    "result": {
+        "tx_id": "0x855f072a0eae73e89352d91db62c4d1eed16dc57361c3b28a8b1c807faae0951"
+    }
+}
+```
+
+
+***Status Code:*** 200
+
+<br>
+
+
+
+##### II. Example Request: transfer_failure
+
+
+
+***Query:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+***Body:***
+
+```js        
+{
+    "from": "0x5e84ce01a3ecfb012e06b93d732eb4e1df047754",
+    "to":  "0x5e84ce01a3ecfb012e06b93d732eb4e1df047755",
+    "amount": 10000 
+    // Integer but not Float
+}
+```
+
+
+
+##### II. Example Response: transfer_failure
+```js
+{
+    "error_code": 1,
+    "error_msg": "reason: the balance of account 0x5e84ce01a3ecfb012e06b93d732eb4e1df047754 is insufficient"
+}
+```
+
+
+***Status Code:*** 200
+
+<br>
+
+
+
 ## weidentity_interactor
 
 
@@ -272,4 +536,4 @@ URL: {{host}}:{{httpport}}/welight/api/v1/weid/create
 
 ---
 [Back to top](#welight-portal)
-> Made with &#9829; by [thedevsaddam](https://github.com/thedevsaddam) | Generated at: 2021-05-19 14:55:42 by [docgen](https://github.com/thedevsaddam/docgen)
+> Made with &#9829; by [thedevsaddam](https://github.com/thedevsaddam) | Generated at: 2021-05-19 15:46:35 by [docgen](https://github.com/thedevsaddam/docgen)

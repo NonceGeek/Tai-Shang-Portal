@@ -45,12 +45,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}:{{http_port}}/api/v1/contracts?app_id=1&secret_key={{secret_key}}",
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/contracts?app_id=1&secret_key={{secret_key}}",
 									"host": [
 										"{{host}}"
 									],
 									"port": "{{http_port}}",
 									"path": [
+										"welight",
 										"api",
 										"v1",
 										"contracts"
@@ -274,12 +275,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}:{{http_port}}welight/api/v1/weid/create?app_id=1&secret_key={{secret_key}}",
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/weid/create?app_id=1&secret_key={{secret_key}}",
 									"host": [
 										"{{host}}"
 									],
-									"port": "{{http_port}}welight",
+									"port": "{{http_port}}",
 									"path": [
+										"welight",
 										"api",
 										"v1",
 										"weid",
@@ -328,6 +330,328 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": \"did:weid:1:0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "token_interactor",
+			"item": [
+				{
+					"name": "ft_transfer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\",\n    \"to\":  \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047755\",\n    \"amount\": 10000 \n    // Integer but not Float\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/transfer?app_id=1&token_addr={{token_addr}}&secret_key={{secret_key}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{http_port}}",
+							"path": [
+								"welight",
+								"api",
+								"v1",
+								"ft",
+								"transfer"
+							],
+							"query": [
+								{
+									"key": "app_id",
+									"value": "1"
+								},
+								{
+									"key": "token_addr",
+									"value": "{{token_addr}}"
+								},
+								{
+									"key": "secret_key",
+									"value": "{{secret_key}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "transfer_success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"from\": \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\",\n    \"to\":  \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047755\",\n    \"amount\": 10000 \n    // Integer but not Float\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/transfer?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"welight",
+										"api",
+										"v1",
+										"ft",
+										"transfer"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "token_address",
+											"value": "{{token_addr}}"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": {\n        \"tx_id\": \"0x855f072a0eae73e89352d91db62c4d1eed16dc57361c3b28a8b1c807faae0951\"\n    }\n}"
+						},
+						{
+							"name": "transfer_failure",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"from\": \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\",\n    \"to\":  \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047755\",\n    \"amount\": 10000 \n    // Integer but not Float\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/transfer?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"welight",
+										"api",
+										"v1",
+										"ft",
+										"transfer"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "token_address",
+											"value": "{{token_addr}}"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"error_code\": 1,\n    \"error_msg\": \"reason: the balance of account 0x5e84ce01a3ecfb012e06b93d732eb4e1df047754 is insufficient\"\n}"
+						}
+					]
+				},
+				{
+					"name": "ft_get_balance",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/get_balance?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}&addr={{addr}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{http_port}}",
+							"path": [
+								"welight",
+								"api",
+								"v1",
+								"ft",
+								"get_balance"
+							],
+							"query": [
+								{
+									"key": "app_id",
+									"value": "1"
+								},
+								{
+									"key": "token_address",
+									"value": "{{token_addr}}"
+								},
+								{
+									"key": "secret_key",
+									"value": "{{secret_key}}"
+								},
+								{
+									"key": "addr",
+									"value": "{{addr}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "get_balance",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/get_balance?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}&addr={{addr}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"welight",
+										"api",
+										"v1",
+										"ft",
+										"get_balance"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "token_address",
+											"value": "{{token_addr}}"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										},
+										{
+											"key": "addr",
+											"value": "{{addr}}"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": {\n        \"balance\": 1000000\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "ft_get_token_info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/get_token_info?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{http_port}}",
+							"path": [
+								"welight",
+								"api",
+								"v1",
+								"ft",
+								"get_token_info"
+							],
+							"query": [
+								{
+									"key": "app_id",
+									"value": "1"
+								},
+								{
+									"key": "token_address",
+									"value": "{{token_addr}}"
+								},
+								{
+									"key": "secret_key",
+									"value": "{{secret_key}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "ft_get_token_info",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/ft/get_token_info?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"welight",
+										"api",
+										"v1",
+										"ft",
+										"get_token_info"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "token_address",
+											"value": "{{token_addr}}"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": {\n        \"name\": \"LeeDuckGoToken\",\n        \"symbol\": \"LDGT\",\n        \"decimals\": 2,\n        \"description\": \"sth\",\n        \"Parent Token\": \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\",\n        \"Total Supply\": 100000000000\n    }\n}"
 						}
 					]
 				}
