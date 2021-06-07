@@ -1,7 +1,8 @@
 defmodule SuperIssuer.Contract do
   use Ecto.Schema
   import Ecto.Changeset
-  alias SuperIssuer.{Chain, Contract, Evidence, EvidenceHandler, ContractTemplate}
+  alias SuperIssuer.{Chain, Contract, Evidence, ContractTemplate}
+  alias SuperIssuer.Contracts.EvidenceHandler
   alias SuperIssuer.Repo
 
   schema "contract" do
@@ -9,11 +10,30 @@ defmodule SuperIssuer.Contract do
     field :description, :string
     field :creater, :string
     field :init_params, :map
+    field :erc721_total_num, :integer
     belongs_to :chain, Chain
     belongs_to :contract_template, ContractTemplate
     has_many :evidence, Evidence
     timestamps()
   end
+
+  def get_contracts_info(contracts) do
+    Enum.map(contracts, fn contract->
+      contract
+        = %{contract_template: c_tem}
+        = Contract.preload(contract)
+      funcs = ContractTemplate.get_funcs(c_tem)
+      events = ContractTemplate.get_events(c_tem)
+      %{}
+      |> Map.put(:id, contract.id)
+      |> Map.put(:init_params, contract.init_params)
+      |> Map.put(:type,  c_tem.name)
+      |> Map.put(:description, contract.description)
+      |> Map.put(:funcs, funcs)
+      |> Map.put(:events, events)
+    end)
+  end
+
   @doc """
     handle is the func when init
   """
@@ -76,7 +96,7 @@ defmodule SuperIssuer.Contract do
   @doc false
   def changeset(%Contract{} = contract, attrs) do
     contract
-    |> cast(attrs, [:addr, :description, :creater, :init_params, :contract_template_id, :chain_id])
-    |> unique_constraint(:description)
+    |> cast(attrs, [:addr, :description, :creater, :init_params, :contract_template_id, :chain_id, :erc721_total_num])
+    |> unique_constraint(:addr)
   end
 end

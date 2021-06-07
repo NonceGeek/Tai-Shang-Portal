@@ -11,6 +11,10 @@ defmodule SuperIssuer.Event do
     field :address, :string
     field :block_height, :integer
     field :log_index, :integer
+    field :ref_nft, :string
+    field :ref_contract_addr, :string
+    field :ref_operator, :string
+    field :ref_weid, :string
     belongs_to :tx, Tx
     timestamps()
   end
@@ -43,9 +47,15 @@ defmodule SuperIssuer.Event do
     |> Repo.insert()
   end
 
+  def change(%Event{} = ele, attrs) do
+    ele
+    |> changeset(attrs)
+    |> Repo.update()
+  end
+
   @doc false
   def changeset(%Event{} = ele, attrs) do
     ele
-    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height])
+    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height, :ref_nft, :ref_contract_addr, :ref_operator, :ref_weid])
   end
 end

@@ -1,4 +1,4 @@
-defmodule SuperIssuer.Contracts.Erc20Handler do
+defmodule SuperIssuer.Contracts.Erc721Handler do
   @moduledoc """
     handle with Erc20 Contract
   """
@@ -7,14 +7,13 @@ defmodule SuperIssuer.Contracts.Erc20Handler do
   @func %{
     name: "name",
     symbol: "symbol",
-    decimals: "decimals",
-    governance: "governance",
-    transfer: "transfer",
     balance_of: "balanceOf",
-    mint: "mint"
+    total_supply: "totalSupply",
+    owner_of: "ownerOf",
+    token_uri: "tokenURI"
   }
 
-  @con_template_name "Erc20"
+  @con_template_name "Erc721"
 
   def get_abi() do
     ContractTemplate.get_abi(@con_template_name)
@@ -27,35 +26,36 @@ defmodule SuperIssuer.Contracts.Erc20Handler do
   @doc """
     including name, symbol, decimals, governance
   """
-  def get(param, chain, erc_20_contract_str, caller_addr) do
+  def get(param, chain, contract_str, caller_addr) do
+
     WeBaseInteractor.handle_tx(
       chain,
       caller_addr,
-      erc_20_contract_str,
+      contract_str,
       Map.get(@func, param),
       [],
       get_abi()
     )
   end
 
-  def get_balance(chain, erc_20_contract_str, caller_addr, query_addr) do
+  def get_token_owner(chain, contract_addr,  caller_addr, token_id) do
     WeBaseInteractor.handle_tx(
       chain,
       caller_addr,
-      erc_20_contract_str,
-      @func.balance_of,
-      [query_addr],
+      contract_addr,
+      @func.owner_of,
+      [token_id],
       get_abi()
     )
   end
 
-  def transfer(chain, erc_20_contract_str, from, to, amount) do
+  def get_token_uri(chain, contract_addr,  caller_addr, token_id) do
     WeBaseInteractor.handle_tx(
       chain,
-      from,
-      erc_20_contract_str,
-      @func.transfer,
-      [to, amount],
+      caller_addr,
+      contract_addr,
+      @func.token_uri,
+      [token_id],
       get_abi()
     )
   end

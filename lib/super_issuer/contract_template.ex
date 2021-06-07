@@ -1,7 +1,7 @@
 defmodule SuperIssuer.ContractTemplate do
   use Ecto.Schema
   import Ecto.Changeset
-  alias SuperIssuer.{Chain, Contract, Evidence, EvidenceHandler}
+  alias SuperIssuer.{Chain, Contract}
   alias SuperIssuer.Repo
   alias SuperIssuer.Ethereum.ABI
   alias SuperIssuer.ContractTemplate, as: Ele
@@ -10,6 +10,22 @@ defmodule SuperIssuer.ContractTemplate do
     field :name, :string
     field :abi, {:array, :map}
     field :bin, :string
+  end
+
+  # +-----------------------------+
+  # | Common Action For Contracts |
+  # +-----------------------------+
+
+  def get_abi(con_template_name) do
+    con_template_name
+    |> Ele.get_by_name()
+    |> Map.get(:abi)
+  end
+
+  def get_bin(con_template_name) do
+    con_template_name
+    |> Ele.get_by_name()
+    |> Map.get(:bin)
   end
 
   def get_funcs(%{abi: abi}) do

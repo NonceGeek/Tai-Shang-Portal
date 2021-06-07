@@ -10,11 +10,15 @@ APIs about WeLight Portal.
   * [get_contracts](#1-get_contracts)
   * [interact_with_contract](#2-interact_with_contract)
 
-* [token_interactor](#token_interactor)
+* [ft_interactor](#ft_interactor)
 
   * [ft_get_balance](#1-ft_get_balance)
   * [ft_get_token_info](#2-ft_get_token_info)
   * [ft_transfer](#3-ft_transfer)
+
+* [nft_interator](#nft_interator)
+
+  * [nft_get_balance](#1-nft_get_balance)
 
 * [weidentity_interactor](#weidentity_interactor)
 
@@ -112,7 +116,7 @@ URL: {{host}}:{{http_port}}/welight/api/v1/contracts
 ```bash
 Method: POST
 Type: RAW
-URL: {{host}}:{{httpport}}/welight/api/v1/contract/func
+URL: https://weimang.cyberemd.com/welight/api/v1/contract/func
 ```
 
 
@@ -203,7 +207,7 @@ URL: {{host}}:{{httpport}}/welight/api/v1/contract/func
 
 
 
-## token_interactor
+## ft_interactor
 
 
 
@@ -459,6 +463,74 @@ URL: {{host}}:{{http_port}}/welight/api/v1/ft/transfer
 
 
 
+## nft_interator
+
+
+
+### 1. nft_get_balance
+
+
+
+***Endpoint:***
+
+```bash
+Method: GET
+Type: 
+URL: {{host}}:{{http_port}}/welight/api/v1/nft/get_balance
+```
+
+
+
+***Query params:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+***More example Requests/Responses:***
+
+
+##### I. Example Request: nft_get_balance
+
+
+
+***Query:***
+
+| Key | Value | Description |
+| --- | ------|-------------|
+| app_id | 1 |  |
+| token_address | {{token_addr}} |  |
+| secret_key | {{secret_key}} |  |
+
+
+
+##### I. Example Response: nft_get_balance
+```js
+[
+    {
+        "token_id": "01",
+        "URI": "https://www.baidu.com"
+        // 可能有其它参数
+    },
+    {
+        "token_id": "02",
+        "URI": "https://www.baidu.com"
+        // 可能有其它参数
+    }    
+]
+```
+
+
+***Status Code:*** 0
+
+<br>
+
+
+
 ## weidentity_interactor
 
 
@@ -536,4 +608,4 @@ URL: {{host}}:{{httpport}}/welight/api/v1/weid/create
 
 ---
 [Back to top](#welight-portal)
-> Made with &#9829; by [thedevsaddam](https://github.com/thedevsaddam) | Generated at: 2021-05-19 15:46:35 by [docgen](https://github.com/thedevsaddam/docgen)
+> Made with &#9829; by [thedevsaddam](https://github.com/thedevsaddam) | Generated at: 2021-06-03 14:47:14 by [docgen](https://github.com/thedevsaddam/docgen)

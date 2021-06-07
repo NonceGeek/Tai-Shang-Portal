@@ -2,8 +2,7 @@ defmodule SuperIssuerWeb.TopLive do
 
   use Phoenix.LiveView
   alias SuperIssuerWeb.TopView
-  alias SuperIssuer.{Contract, Evidence, EvidenceHandler, Credential}
-  alias SuperIssuer.Repo
+  alias SuperIssuer.Credential
 
 
   def render(assigns) do

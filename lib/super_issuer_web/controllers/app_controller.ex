@@ -1,5 +1,6 @@
 defmodule SuperIssuerWeb.AppController do
-  alias SuperIssuer.{WeIdentity, AppCenter, App, Chain, Contract, ContractTemplate, EvidenceHandler, WeidInteractor}
+  alias SuperIssuer.{WeIdentity, AppCenter, App, Chain, Contract, ContractTemplate, WeidInteractor}
+  alias SuperIssuer.Contracts.EvidenceHandler
   use SuperIssuerWeb, :controller
 
   @weid_rest_service_path Application.get_env(:super_issuer, :weid_rest_service_path)
@@ -40,7 +41,7 @@ defmodule SuperIssuerWeb.AppController do
     end
   end
   def do_get_contracts({:ok, %{contracts: contracts}}, conn) do
-    contracts_info = get_contracts_info(contracts)
+    contracts_info = Contract.get_contracts_info(contracts)
     json(conn, contracts_info)
   end
 
@@ -51,22 +52,7 @@ defmodule SuperIssuerWeb.AppController do
     json(conn, payload)
   end
 
-  def get_contracts_info(contracts) do
-    Enum.map(contracts, fn contract->
-      contract
-        = %{contract_template: c_tem}
-        = Contract.preload(contract)
-      funcs = ContractTemplate.get_funcs(c_tem)
-      events = ContractTemplate.get_events(c_tem)
-      %{}
-      |> Map.put(:id, contract.id)
-      |> Map.put(:init_params, contract.init_params)
-      |> Map.put(:type,  c_tem.name)
-      |> Map.put(:description, contract.description)
-      |> Map.put(:funcs, funcs)
-      |> Map.put(:events, events)
-    end)
-  end
+
 
   @doc """
     [api]/contract/func
@@ -121,8 +107,7 @@ defmodule SuperIssuerWeb.AppController do
       evidence: evi,
       signer: signer
     }) do
-    # !temp
-    # with :ok <- EvidenceHandler.evi_valid?(evi) do
+    with :ok <- EvidenceHandler.evi_valid?(evi) do
 
       {:ok, evi} =
         EvidenceHandler.new_evidence(
@@ -132,10 +117,10 @@ defmodule SuperIssuerWeb.AppController do
           evi)
       evi_struct = StructTranslater.struct_to_map(evi)
       Map.put(@resp_success, :result, evi_struct)
-    # else
-    #   _ ->
-    #   Map.put(@resp_failure, :result, "evidence is not regular")
-    # end
+    else
+      _ ->
+      Map.put(@resp_failure, :result, "evidence is not regular")
+    end
   end
 
   # +----------+

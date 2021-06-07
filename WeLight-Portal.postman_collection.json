@@ -117,11 +117,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{httpport}}/welight/api/v1/contract/func?app_id=1&secret_key={{secret_key}}",
+							"raw": "https://weimang.cyberemd.com/welight/api/v1/contract/func?app_id=1&secret_key={{secret_key}}",
+							"protocol": "https",
 							"host": [
-								"{{host}}"
+								"weimang",
+								"cyberemd",
+								"com"
 							],
-							"port": "{{httpport}}",
 							"path": [
 								"welight",
 								"api",
@@ -336,7 +338,7 @@
 			]
 		},
 		{
-			"name": "token_interactor",
+			"name": "ft_interactor",
 			"item": [
 				{
 					"name": "ft_transfer",
@@ -652,6 +654,87 @@
 							"header": null,
 							"cookie": [],
 							"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"success\",\n    \"result\": {\n        \"name\": \"LeeDuckGoToken\",\n        \"symbol\": \"LDGT\",\n        \"decimals\": 2,\n        \"description\": \"sth\",\n        \"Parent Token\": \"0x5e84ce01a3ecfb012e06b93d732eb4e1df047754\",\n        \"Total Supply\": 100000000000\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "nft_interator",
+			"item": [
+				{
+					"name": "nft_get_balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{http_port}}/welight/api/v1/nft/get_balance?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{http_port}}",
+							"path": [
+								"welight",
+								"api",
+								"v1",
+								"nft",
+								"get_balance"
+							],
+							"query": [
+								{
+									"key": "app_id",
+									"value": "1"
+								},
+								{
+									"key": "token_address",
+									"value": "{{token_addr}}"
+								},
+								{
+									"key": "secret_key",
+									"value": "{{secret_key}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "nft_get_balance",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}:{{http_port}}/welight/api/v1/nft/get_balance?app_id=1&token_address={{token_addr}}&secret_key={{secret_key}}",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{http_port}}",
+									"path": [
+										"welight",
+										"api",
+										"v1",
+										"nft",
+										"get_balance"
+									],
+									"query": [
+										{
+											"key": "app_id",
+											"value": "1"
+										},
+										{
+											"key": "token_address",
+											"value": "{{token_addr}}"
+										},
+										{
+											"key": "secret_key",
+											"value": "{{secret_key}}"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "[\n    {\n        \"token_id\": \"01\",\n        \"URI\": \"https://www.baidu.com\"\n        // 可能有其它参数\n    },\n    {\n        \"token_id\": \"02\",\n        \"URI\": \"https://www.baidu.com\"\n        // 可能有其它参数\n    }    \n]"
 						}
 					]
 				}

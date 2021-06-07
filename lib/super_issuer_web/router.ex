@@ -41,7 +41,7 @@ defmodule SuperIssuerWeb.Router do
     live "/live/event", EventLive
 
     live "/live/app", AppLive
-    live "/live/admin", AdminLive
+    # live "/live/admin", AdminLive
 
     # live "/", PageLive, :index
   end

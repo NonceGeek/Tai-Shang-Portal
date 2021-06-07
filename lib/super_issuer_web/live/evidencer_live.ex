@@ -2,8 +2,8 @@ defmodule SuperIssuerWeb.EvidencerLive do
 
   use Phoenix.LiveView
   alias SuperIssuerWeb.EvidencerView
-  alias SuperIssuer.{User, Contract, EvidenceHandler}
-
+  alias SuperIssuer.{User, Contract}
+  alias SuperIssuer.Contracts.EvidenceHandler
   def render(assigns) do
     EvidencerView.render("evidencer.html", assigns)
   end
@@ -52,13 +52,6 @@ defmodule SuperIssuerWeb.EvidencerLive do
     |> assign(form: :payloads)
     |> assign(contracts: contracts_des)
     |> assign(signers: signers)
-  }
-  end
-
-  def mount(_params, _, socket) do
-    {:ok,
-    socket
-    |> redirect(to: "/")
   }
   end
 

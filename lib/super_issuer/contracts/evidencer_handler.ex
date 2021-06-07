@@ -1,4 +1,4 @@
-defmodule SuperIssuer.EvidenceHandler do
+defmodule SuperIssuer.Contracts.EvidenceHandler do
   @moduledoc """
     handle with Evidence Contract
   """
@@ -12,16 +12,14 @@ defmodule SuperIssuer.EvidenceHandler do
     get_signers: "getSigners",
   }
 
+  @con_template_name "Evidence"
+
   def get_abi() do
-    "Evidence"
-    |> ContractTemplate.get_by_name()
-    |> Map.get(:abi)
+    ContractTemplate.get_abi(@con_template_name)
   end
 
   def get_bin() do
-    "Evidence"
-    |> ContractTemplate.get_by_name()
-    |> Map.get(:bin)
+    ContractTemplate.get_bin(@con_template_name)
   end
 
   def new_evidence(chain, signer, contract, evidence) do
@@ -131,6 +129,20 @@ defmodule SuperIssuer.EvidenceHandler do
         :error
     end
 
+  end
+
+  def parse_evi(nil), do: %{}
+
+  def parse_evi(evi) do
+    evi_handled =
+      evi
+      |> String.replace("\'","\"")
+    with {:ok, evi_decoded} <- Poison.decode(evi_handled) do
+        evi_decoded
+      else
+        _ ->
+        %{}
+    end
   end
 
   def do_did_valid?(did) do
