@@ -153,11 +153,14 @@ defmodule SuperIssuerWeb.AppController do
     result =
       Repo.transaction(fn ->
         try do
-          {:ok, _weid} =
+          {:ok, %{id: weid_id, weid: weid}} =
             priv_key
             |> build_weid_params(weid)
             |> WeIdentity.create()
 
+          addr = Account.fetch_addr_by_weid(weid)
+          {:ok, _acct} =
+            Account.create(%{weidentity_id: weid_id, addr: addr})
           user_name = generate_user_name(app_id)
 
           priv_hex = Base.encode16(priv_key, case: :lower)
@@ -217,15 +220,9 @@ defmodule SuperIssuerWeb.AppController do
 
   @spec fetch_priv(binary, binary) :: binary
   def fetch_priv(weid, weid_rest_service_path) do
-    file_name = translate_to_file_name(weid)
+    file_name = Account.fetch_addr_by_weid(weid)
     full_path = weid_rest_service_path <>(file_name)
     FileHandler.read(:bin, full_path)
-  end
-
-  def translate_to_file_name(weid) do
-      weid
-      |> String.split(":")
-      |> Enum.fetch!(-1)
   end
 
   def generate_user_name(app_id) do

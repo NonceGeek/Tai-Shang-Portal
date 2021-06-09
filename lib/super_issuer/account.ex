@@ -18,6 +18,12 @@ defmodule SuperIssuer.Account do
     timestamps()
   end
 
+  def fetch_addr_by_weid(weid) do
+    weid
+    |> String.split(":")
+    |> Enum.fetch!(-1)
+  end
+
   # +---------------+
   # | Account Funcs |
   # +---------------+
