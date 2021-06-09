@@ -1,4 +1,6 @@
 defmodule WeBaseInteractor do
+  alias SuperIssuer.Chain
+
   @handle_tx_body_struct %{
     user: nil,
     contractAddress: nil,
@@ -50,6 +52,8 @@ defmodule WeBaseInteractor do
   # +---------+
   # | others  |
   # +---------+
+
+  @spec create_account(Chain.t(), String.t(), String.t()) :: {:ok, String.t()}
   def create_account(chain, priv_key, user_name) do
     node = get_webase_node(chain)
 

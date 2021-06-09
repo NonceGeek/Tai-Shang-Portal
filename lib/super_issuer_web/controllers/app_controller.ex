@@ -155,8 +155,10 @@ defmodule SuperIssuerWeb.AppController do
       |> WeIdentity.create()
 
     user_name = generate_user_name(app_id)
+
+    priv_hex = Base.encode16(priv_key, case: :lower)
     {:ok, _addr} =
-      WeBaseInteractor.create_account(chain, priv_key, user_name)
+      WeBaseInteractor.create_account(chain, priv_hex, user_name)
     payload = Map.put(@resp_success, :result, weid)
     json(conn, payload)
   end
