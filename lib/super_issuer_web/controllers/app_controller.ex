@@ -1,6 +1,7 @@
 defmodule SuperIssuerWeb.AppController do
   alias SuperIssuer.{WeIdentity, AppCenter, App, Chain, Contract, ContractTemplate, WeidInteractor}
   alias SuperIssuer.Contracts.EvidenceHandler
+  alias SuperIssuer.Account
   use SuperIssuerWeb, :controller
 
   @weid_rest_service_path Application.get_env(:super_issuer, :weid_rest_service_path)
@@ -51,8 +52,6 @@ defmodule SuperIssuerWeb.AppController do
       |> Map.put(:error_msg, info)
     json(conn, payload)
   end
-
-
 
   @doc """
     [api]/contract/func
@@ -146,13 +145,18 @@ defmodule SuperIssuerWeb.AppController do
   end
   def has_weid_permission?(others), do: others
 
-  def do_create_weid({:ok, _app}, %{chain_id: chain_id}, conn) do
+  def do_create_weid({:ok, %{id: app_id}}, %{chain_id: chain_id}, conn) do
     chain = Chain.get_by_id(chain_id)
     {:ok, weid} = WeidInteractor.create_weid(chain)
+    priv_key = fetch_priv_bin(weid)
     {:ok, _weid} =
-      weid
-      |> build_weid_params()
+      priv_key
+      |> build_weid_params(weid)
       |> WeIdentity.create()
+
+    user_name = generate_user_name(app_id)
+    {:ok, _addr} =
+      WeBaseInteractor.create_account(chain, priv_key, user_name)
     payload = Map.put(@resp_success, :result, weid)
     json(conn, payload)
   end
@@ -161,18 +165,21 @@ defmodule SuperIssuerWeb.AppController do
     json(conn, %{error: info})
   end
 
-  def build_weid_params(weid) do
-    priv =
-      weid
-      |> fetch_priv(@weid_rest_service_path)
-      # to binary
-      |> String.to_integer()
-      |> Integer.to_string(16)
-      |> Base.decode16!
+  def fetch_priv_bin(weid) do
+    weid
+    |> fetch_priv(@weid_rest_service_path)
+    # to binary
+    |> String.to_integer()
+    |> Integer.to_string(16)
+    |> Base.decode16!()
+  end
 
+  def build_weid_params(priv, weid) do
+    # get priv from weid-rest-service
     %{weid: weid, type: "LocalWeidRestService", encrypted_privkey: priv}
   end
 
+  @spec fetch_priv(binary, binary) :: binary
   def fetch_priv(weid, weid_rest_service_path) do
     file_name = translate_to_file_name(weid)
     full_path = weid_rest_service_path <>(file_name)
@@ -183,6 +190,108 @@ defmodule SuperIssuerWeb.AppController do
       weid
       |> String.split(":")
       |> Enum.fetch!(-1)
+  end
+
+  def generate_user_name(app_id) do
+    timestamp_mil = RandGen.get_timestamp()
+    rand_num = RandGen.gen_hex(8)
+
+    "#{app_id}_#{timestamp_mil}_#{rand_num}"
+  end
+
+
+  # +-----------+
+  # | token api |
+  # +-----------+
+
+  def get_ft_balance(conn, params) do
+    params_structed =
+      params
+      |> StructTranslater.to_atom_struct()
+
+      params_structed
+      |> auth()
+      |> do_get_ft_balance(params_structed, conn)
+  end
+
+  def do_get_ft_balance({:ok, _app},
+    %{token_addr: token_addr, addr: addr},
+    conn) do
+      %{chain: chain} =
+        contract =
+          token_addr
+          |> Contract.get_by_addr()
+          |> Contract.preload()
+
+    {:ok, balance} =
+      Account.get_ft_balance(chain, contract, addr, addr)
+    payload =
+      Map.put(@resp_success, :result, %{balance: balance})
+    json(conn, payload)
+  end
+
+  def do_get_ft_balance(app_info, params, conn) do
+    handle_error(app_info, params, conn)
+  end
+
+
+  def transfer_ft(conn, params) do
+    params_structed =
+      params
+      |> StructTranslater.to_atom_struct()
+
+      params_structed
+      |> auth()
+      |> do_transfer_ft(params_structed, conn)
+  end
+
+  def do_transfer_ft({:ok, _app},
+  %{
+    token_addr: token_addr,
+    from: from,
+    to: to,
+    amount: amount},
+  conn) do
+    %{chain: chain} =
+      contract =
+        token_addr
+        |> Contract.get_by_addr()
+        |> Contract.preload()
+    {:ok, tx_id} = Account.transfer_ft(chain, contract, from, to, amount)
+    payload =
+      Map.put(@resp_success, :result, %{tx_id: tx_id})
+    json(conn, payload)
+
+  end
+
+  def do_transfer_ft(app_info, params, conn) do
+    handle_error(app_info, params, conn)
+  end
+
+  def get_nft_balance(conn, params) do
+    params_structed =
+      params
+      |> StructTranslater.to_atom_struct()
+
+    do_get_nft_balance(params_structed, conn)
+  end
+
+  def do_get_nft_balance(%{token_addr: token_addr, addr: addr}, conn) do
+    %{chain: chain} =
+      contract =
+        token_addr
+        |> Contract.get_by_addr()
+        |> Contract.preload()
+    {:ok, nft_balance} = Account.get_nft_balance(chain, contract, addr, addr)
+    payload = Map.put(@resp_success, :result, %{balance: nft_balance})
+    json(conn, payload)
+  end
+
+  def handle_error({:error, info}, _params, conn) do
+    payload =
+      @resp_failure
+      |> Map.put(:error_msg, info)
+    json(conn, payload)
   end
 
 

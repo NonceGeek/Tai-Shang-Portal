@@ -20,4 +20,8 @@ defmodule RandGen do
     |> :crypto.strong_rand_bytes()
     |> Kernel.<>(:binary.encode_unsigned(:os.system_time(100)))
   end
+
+  def get_timestamp() do
+    :os.system_time(:millisecond)
+  end
 end

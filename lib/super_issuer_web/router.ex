@@ -49,9 +49,19 @@ defmodule SuperIssuerWeb.Router do
   # Other scopes may use custom stacks.
   scope "/welight/api/v1", SuperIssuerWeb do
     pipe_through :api
+
+    # weidentity group
+    post "/weid/create", AppController, :create_weid
+
+    # contract group
     get "/contracts", AppController, :get_contracts
     post "/contract/func", AppController, :interact_with_contract
-    post "/weid/create", AppController, :create_weid
+
+    # token group
+    get "/ft/get_balance", AppController, :get_ft_balance
+    post "/ft/transfer", AppController, :transfer_ft
+    get "/nft/get_balance", AppController, :get_nft_balance
+
   end
 
   # Enables LiveDashboard only for development

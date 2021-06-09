@@ -47,9 +47,24 @@ defmodule SuperIssuer.Account do
     update_ft_balance(erc_20_addr, acct, ft_new_balance)
   end
 
-  def update_ft_balance(erc_20_addr, acct, ft_new_balance) do
-      payload = Map.put(acct.ft_balance, erc_20_addr, ft_new_balance)
-      Ele.change(acct, %{ft_balance: payload})
+  def update_ft_balance(
+    erc20_addr,
+    %{ft_balance: ft_balance_local} = acct,
+    ft_new_balance)
+  when is_nil(ft_balance_local) do
+    do_update_ft_balance(erc20_addr, acct, %{}, ft_new_balance)
+  end
+
+  def update_ft_balance(
+    erc20_addr,
+    %{ft_balance: ft_balance_local} = acct,
+    ft_new_balance) do
+      do_update_ft_balance(erc20_addr, acct, ft_balance_local, ft_new_balance)
+  end
+
+  def do_update_ft_balance(erc20_addr, acct, ft_balance_local, ft_new_balance) do
+    payload = Map.put(ft_balance_local, erc20_addr, ft_new_balance)
+    Ele.change(acct, %{ft_balance: payload})
   end
 
   def update_nft_balnace(_erc721_addr, acct, token_id, _token_uri)
@@ -86,23 +101,42 @@ defmodule SuperIssuer.Account do
     with {:ok, :pos} <- check_amount_pos(amount),
       {:ok, :balance_enough} <- checkout_balance_enough(ft_balance, amount) do
         # Ensure Transfer is Ok
-        {:ok, %{"statusOK" => true}} = Erc20Handler.transfer(chain, erc_20_addr, from, to, amount)
+        {:ok,
+         %{
+           "statusOK" => true,
+           "transactionHash" => tx_id
+           }}  = payload = Erc20Handler.transfer(chain, erc_20_addr, from, to, amount)
+        IO.puts inspect payload
 
         # Update the balance
-        {:ok, %Account{}} = sync_to_local(contract, from, ft_balance - amount)
-        sync_to_local(contract, to, ft_balance + amount)
+        Task.async(fn ->
+          # eazy way suit now!
+          :timer.sleep(3000)
+          {:ok, from_balance} = get_ft_balance(chain, contract, from, from)
+          {:ok, to_balance} = get_ft_balance(chain, contract, to, to)
+          Logger.info("#{from} balance is #{from_balance} now")
+          Logger.info("#{to} balance is #{to_balance} now")
+        end)
+        # {:ok, %Account{}} = sync_to_local(contract, from, ft_balance - amount)
+        # sync_to_local(contract, to, ft_balance + amount)
+        {:ok, tx_id}
     else
       error_info ->
         error_info
     end
   end
 
-  def get_nft_balance(chain, %{addr: contract_addr, erc721_total_num: local_supply} = erc_721_contract, caller_addr) do
+  def get_nft_balance(chain, %{addr: contract_addr, erc721_total_num: local_supply} = erc_721_contract, caller_addr, query_addr) do
 
     {:ok, [total_supply]} =  Erc721Handler.get(:total_supply, chain, contract_addr, caller_addr)
     sync_nfts(chain, local_supply, total_supply, contract_addr, caller_addr)
+
     # update total_supply
     Contract.change(erc_721_contract, %{erc721_total_num: total_supply})
+
+    # get_addr's all nft
+    %{nft_balance: nft_balance} = get_by_addr(query_addr)
+    {:ok, nft_balance}
   end
 
   def sync_nfts(_chain, local_supply, total_supply, _contract_addr, _caller_addr) when local_supply == total_supply, do: :pass

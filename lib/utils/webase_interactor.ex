@@ -73,6 +73,11 @@ defmodule WeBaseInteractor do
   def handle_tx(chain, user_addr, contract_addr, func_name, func_param, contract_abi, group_id) do
     node = get_webase_node(chain)
 
+    # IO.puts inspect chain
+    # IO.puts inspect user_addr
+    # IO.puts inspect contract_addr
+    # IO.puts inspect func_name
+    # IO.puts inspect func_param
     body =
       @handle_tx_body_struct
       |> Map.put(:user, user_addr)
