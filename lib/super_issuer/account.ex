@@ -141,9 +141,18 @@ defmodule SuperIssuer.Account do
     Contract.change(erc_721_contract, %{erc721_total_num: total_supply})
 
     # get_addr's all nft
-    %{nft_balance: nft_balance} = get_by_addr(query_addr)
+    %{nft_balance: nft_balance} =
+      query_addr
+      |> get_by_addr()
+      |> handle_nil()
     {:ok, nft_balance}
   end
+
+  def handle_nil(payload) when is_nil(payload) do
+    %{nft_balance: []}
+  end
+
+  def handle_nil(payload), do: payload
 
   def sync_nfts(_chain, local_supply, total_supply, _contract_addr, _caller_addr) when local_supply == total_supply, do: :pass
 
