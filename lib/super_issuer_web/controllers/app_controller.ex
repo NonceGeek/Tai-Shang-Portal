@@ -1,7 +1,7 @@
 defmodule SuperIssuerWeb.AppController do
   alias SuperIssuer.{WeIdentity, AppCenter, App, Chain, Contract, ContractTemplate, WeidInteractor}
   alias SuperIssuer.Contracts.EvidenceHandler
-  alias SuperIssuer.Account
+  alias SuperIssuer.{Account, Repo}
   use SuperIssuerWeb, :controller
 
   @weid_rest_service_path Application.get_env(:super_issuer, :weid_rest_service_path)
@@ -149,22 +149,44 @@ defmodule SuperIssuerWeb.AppController do
     chain = Chain.get_by_id(chain_id)
     {:ok, weid} = WeidInteractor.create_weid(chain)
     priv_key = fetch_priv_bin(weid)
-    {:ok, _weid} =
-      priv_key
-      |> build_weid_params(weid)
-      |> WeIdentity.create()
 
-    user_name = generate_user_name(app_id)
+    result =
+      Repo.transaction(fn ->
+        try do
+          {:ok, _weid} =
+            priv_key
+            |> build_weid_params(weid)
+            |> WeIdentity.create()
 
-    priv_hex = Base.encode16(priv_key, case: :lower)
-    {:ok, _addr} =
-      WeBaseInteractor.create_account(chain, priv_hex, user_name)
-    payload = Map.put(@resp_success, :result, weid)
-    json(conn, payload)
+          user_name = generate_user_name(app_id)
+
+          priv_hex = Base.encode16(priv_key, case: :lower)
+          {:ok, _addr} =
+            WeBaseInteractor.create_account(chain, priv_hex, user_name)
+
+          {:ok, weid}
+
+          rescue
+            error ->
+              error_str = inspect(error)
+              Repo.rollback("reason: #{error_str}")
+              {:error, error_str}
+        end
+      end)
+
+    case result do
+      {:ok, weid} ->
+        payload = Map.put(@resp_success, :result, weid)
+        json(conn, payload)
+      {:error, error_str} ->
+        handle_error({:error, error_str}, conn)
+    end
+
+
   end
 
-  def do_create_weid({:error, info}, _params_struct, conn) do
-    json(conn, %{error: info})
+  def do_create_weid({:error, info}, params_struct, conn) do
+    handle_error({:error, info}, params_struct, conn)
   end
 
   def fetch_priv_bin(weid) do
@@ -286,6 +308,13 @@ defmodule SuperIssuerWeb.AppController do
         |> Contract.preload()
     {:ok, nft_balance} = Account.get_nft_balance(chain, contract, addr, addr)
     payload = Map.put(@resp_success, :result, %{balance: nft_balance})
+    json(conn, payload)
+  end
+
+  def handle_error({:error, info}, conn) do
+    payload =
+      @resp_failure
+      |> Map.put(:error_msg, info)
     json(conn, payload)
   end
 
