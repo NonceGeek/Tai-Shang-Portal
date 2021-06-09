@@ -175,7 +175,9 @@ defmodule SuperIssuerWeb.AppController do
       end)
 
     case result do
-      {:ok, weid} ->
+      # transaction ok and weid stream ok
+      {:ok, {:ok, weid}} ->
+
         payload = Map.put(@resp_success, :result, weid)
         json(conn, payload)
       {:error, error_str} ->
