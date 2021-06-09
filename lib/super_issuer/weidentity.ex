@@ -13,10 +13,14 @@ defmodule SuperIssuer.WeIdentity do
     timestamps()
   end
 
+  def get_all() do
+    Repo.all(WeIdentity)
+  end
   def get_by_weid(ele) when is_nil(ele), do: nil
   def get_by_weid(ele) do
     Repo.get_by(WeIdentity, weid: ele)
   end
+
 
   def create(attrs \\ %{}) do
     %WeIdentity{}

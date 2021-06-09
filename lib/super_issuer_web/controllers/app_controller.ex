@@ -319,10 +319,29 @@ defmodule SuperIssuerWeb.AppController do
         |> Contract.get_by_addr()
         |> Contract.preload()
     {:ok, nft_balance} = Account.get_nft_balance(chain, contract, addr, addr)
-    payload = Map.put(@resp_success, :result, %{balance: nft_balance})
+    reorged_nft_balance = re_org_nft_balance(nft_balance)
+    payload = Map.put(@resp_success, :result, %{balance: reorged_nft_balance})
     json(conn, payload)
   end
 
+  def re_org_nft_balance(nft_balance) do
+    Enum.map(nft_balance, fn {token_addr, tokens} ->
+      reorged_tokens = re_org_nft_tokens(tokens)
+      %{
+        token_addr: token_addr,
+        tokens: reorged_tokens
+      }
+    end)
+  end
+
+  def re_org_nft_tokens(tokens) do
+    Enum.map(tokens, fn {token_id, token_uri} ->
+      %{
+        token_id: token_id,
+        token_uri: token_uri
+      }
+    end)
+  end
   def handle_error({:error, info}, conn) do
     payload =
       @resp_failure
