@@ -190,12 +190,22 @@ defmodule SuperIssuerWeb.AppController do
   end
 
   def fetch_priv_bin(weid) do
-    weid
-    |> fetch_priv(@weid_rest_service_path)
-    # to binary
-    |> String.to_integer()
-    |> Integer.to_string(16)
-    |> Base.decode16!()
+    hex_str =
+      weid
+      |> fetch_priv(@weid_rest_service_path)
+      # to binary
+      |> String.to_integer()
+      |> Integer.to_string(16)
+
+
+    case byte_size(hex_str) do
+      63 ->
+        "0"
+        |> Kernel.<>(hex_str)
+        |> Base.decode16!()
+      _ ->
+        Base.decode16!(hex_str)
+    end
   end
 
   def build_weid_params(priv, weid) do
