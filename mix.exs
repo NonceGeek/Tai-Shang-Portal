@@ -63,7 +63,10 @@ defmodule SuperIssuer.MixProject do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       # live clock example
-      {:nimble_strftime, ">= 0.0.0"}
+      {:nimble_strftime, ">= 0.0.0"},
+
+      # cross domain
+      {:cors_plug, "~> 2.0"}
     ]
   end
 

@@ -163,7 +163,9 @@ defmodule SuperIssuer.Account do
    Enum.map((local_supply + 1)..total_supply, fn token_id ->
     {:ok, %{owner_addr: owner_addr, token_uri: token_uri}} =
       sync_nft(chain, token_id, contract_addr, caller_addr)
+
     acct = get_by_addr(owner_addr)
+
     {:ok, _ele} = update_nft_balnace(contract_addr, acct, token_id, token_uri)
    end)
   end

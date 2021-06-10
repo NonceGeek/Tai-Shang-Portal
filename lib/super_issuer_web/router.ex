@@ -10,6 +10,11 @@ defmodule SuperIssuerWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :api_allow_cross do
+    plug CORSPlug
+    plug :accepts, ["json"]
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -60,9 +65,16 @@ defmodule SuperIssuerWeb.Router do
     # token group
     get "/ft/get_balance", AppController, :get_ft_balance
     post "/ft/transfer", AppController, :transfer_ft
-    get "/nft/get_balance", AppController, :get_nft_balance
 
   end
+
+  scope "/welight/api/v1", SuperIssuerWeb do
+    pipe_through :api_allow_cross
+    get "/nft/get_balance", AppController, :get_nft_balance
+  end
+
+  # ports that allow cross domain
+
 
   # Enables LiveDashboard only for development
   #
