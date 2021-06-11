@@ -141,15 +141,21 @@ defmodule SuperIssuer.Account do
     Contract.change(erc_721_contract, %{erc721_total_num: total_supply})
 
     # get_addr's all nft
-    %{nft_balance: nft_balance} =
-      query_addr
-      |> get_by_addr()
-      |> handle_nil()
-    {:ok, nft_balance}
+    query_addr
+    |> get_by_addr()
+    |> handle_nil()
+    |> case do
+      %{nft_balance: nft_balance} ->
+        {:ok, nft_balance}
+      {:error, error_info} ->
+        {:error, error_info}
+    end
+
   end
 
   def handle_nil(payload) when is_nil(payload) do
-    %{nft_balance: []}
+    Logger.info("query addr owner is not in our Account List")
+    {:error, "query addr is not in our Account List"}
   end
 
   def handle_nil(payload), do: payload

@@ -315,10 +315,15 @@ defmodule SuperIssuerWeb.AppController do
         token_addr
         |> Contract.get_by_addr()
         |> Contract.preload()
-    {:ok, nft_balance} = Account.get_nft_balance(chain, contract, addr, addr)
-    reorged_nft_balance = re_org_nft_balance(nft_balance)
-    payload = Map.put(@resp_success, :result, %{balance: reorged_nft_balance})
-    json(conn, payload)
+    case Account.get_nft_balance(chain, contract, addr, addr) do
+      {:ok, nft_balance} ->
+        reorged_nft_balance = re_org_nft_balance(nft_balance)
+        payload = Map.put(@resp_success, :result, %{balance: reorged_nft_balance})
+        json(conn, payload)
+      {:error, error_info} ->
+        handle_error({:error, error_info}, conn)
+    end
+
   end
 
   def re_org_nft_balance(nft_balance) do
