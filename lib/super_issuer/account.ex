@@ -3,7 +3,6 @@ defmodule SuperIssuer.Account do
   import Ecto.Changeset
   alias SuperIssuer.{Contract, WeIdentity}
   alias SuperIssuer.Contracts.{Erc20Handler, Erc721Handler}
-  alias SuperIssuer.Account
   alias SuperIssuer.Repo
   alias SuperIssuer.Account, as: Ele
 
@@ -13,7 +12,7 @@ defmodule SuperIssuer.Account do
     field :addr, :string
     field :ft_balance, :map
     field :nft_balance, :map
-
+    field :type, :string
     belongs_to :weidentity, WeIdentity
     timestamps()
   end
@@ -231,6 +230,6 @@ defmodule SuperIssuer.Account do
 
   def changeset(%Ele{} = ele, attrs) do
     ele
-    |> cast(attrs, [:addr, :weidentity_id, :ft_balance, :nft_balance])
+    |> cast(attrs, [:addr, :weidentity_id, :ft_balance, :nft_balance, :type])
   end
 end
