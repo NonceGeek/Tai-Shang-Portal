@@ -251,13 +251,16 @@ defmodule SuperIssuerWeb.AppController do
   end
 
   def do_get_ft_balance({:ok, _app},
-    %{token_addr: token_addr, addr: addr},
+    params_structed,
     conn) do
-      %{chain: chain} =
-        contract =
-          token_addr
-          |> Contract.get_by_addr()
-          |> Contract.preload()
+
+    %{token_addr: token_addr, addr: addr} = downcase(params_structed)
+
+    %{chain: chain} =
+      contract =
+        token_addr
+        |> Contract.get_by_addr()
+        |> Contract.preload()
 
     {:ok, balance} =
       Account.get_ft_balance(chain, contract, addr, addr)
@@ -282,12 +285,14 @@ defmodule SuperIssuerWeb.AppController do
   end
 
   def do_transfer_ft({:ok, _app},
-  %{
-    token_addr: token_addr,
-    from: from,
-    to: to,
-    amount: amount},
+  params_structed,
   conn) do
+    %{
+      token_addr: token_addr,
+      from: from,
+      to: to,
+      amount: amount} =
+        downcase(params_structed)
     %{chain: chain} =
       contract =
         token_addr
@@ -315,7 +320,21 @@ defmodule SuperIssuerWeb.AppController do
     do_get_nft_balance(params_structed, conn)
   end
 
-  def do_get_nft_balance(%{token_addr: token_addr, addr: addr}, conn) do
+  def downcase(params_structed) do
+    params_structed
+    |> Enum.map(fn {k, v}->
+      if is_binary(v) do
+        {k, String.downcase(v)}
+      else
+        {k, v}
+      end
+
+    end)
+    |> Enum.into(%{})
+  end
+  def do_get_nft_balance(params_structed, conn) do
+    %{token_addr: token_addr, addr: addr} =
+      downcase(params_structed)
     %{chain: chain} =
       contract =
         token_addr

@@ -111,7 +111,6 @@ defmodule SuperIssuer.Account do
            "statusOK" => true,
            "transactionHash" => tx_id
            }}  = payload = Erc20Handler.transfer(chain, erc_20_addr, from, to, amount)
-        IO.puts inspect payload
 
         # Update the balance
         Task.async(fn ->
