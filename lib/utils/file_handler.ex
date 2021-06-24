@@ -11,4 +11,6 @@ defmodule FileHandler do
     |> File.read!()
     |> String.replace("\n", "")
   end
+
+  def fetch_files_in_path(path), do: Path.wildcard(path)
 end

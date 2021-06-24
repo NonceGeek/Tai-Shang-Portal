@@ -148,6 +148,8 @@ defmodule SuperIssuerWeb.AppController do
   def do_create_weid({:ok, %{id: app_id}}, %{chain_id: chain_id}, conn) do
     chain = Chain.get_by_id(chain_id)
     {:ok, weid} = WeidInteractor.create_weid(chain)
+
+    # get weid in weid rest_service
     priv_key = fetch_priv_bin(weid)
 
     result =
@@ -159,6 +161,7 @@ defmodule SuperIssuerWeb.AppController do
             |> WeIdentity.create()
 
           addr = Account.fetch_addr_by_weid(weid)
+          # # create account local
           {:ok, _acct} =
             Account.create(%{weidentity_id: weid_id, addr: addr})
           user_name = generate_user_name(app_id)
@@ -290,11 +293,14 @@ defmodule SuperIssuerWeb.AppController do
         token_addr
         |> Contract.get_by_addr()
         |> Contract.preload()
-    {:ok, tx_id} = Account.transfer_ft(chain, contract, from, to, amount)
-    payload =
-      Map.put(@resp_success, :result, %{tx_id: tx_id})
-    json(conn, payload)
-
+    case Account.transfer_ft(chain, contract, from, to, amount) do
+      {:ok, tx_id} ->
+        payload =
+          Map.put(@resp_success, :result, %{tx_id: tx_id})
+        json(conn, payload)
+      {:error, info} ->
+        handle_error({:error, info}, conn)
+    end
   end
 
   def do_transfer_ft(app_info, params, conn) do

@@ -144,6 +144,8 @@ defmodule SuperIssuer.Account do
     |> get_by_addr()
     |> handle_nil()
     |> case do
+      %{nft_balance: nil} ->
+        {:ok, []}
       %{nft_balance: nft_balance} ->
         {:ok, nft_balance}
       {:error, error_info} ->
