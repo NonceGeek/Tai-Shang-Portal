@@ -1,9 +1,8 @@
 alias SuperIssuer.WeIdentity
 alias SuperIssuerWeb.AppController
-@weid_rest_service_path "/home/ubuntu/weid-http-service/dist/keys/priv"
 
 def handle_weids() do
-  @weid_rest_service_path
+  "/home/ubuntu/weid-http-service/dist/keys/priv"
   |> FileHandler.fetch_files_in_path()
   |> Enum.reject(fn name -> name == "ecdsa_key" end)
   |> Enum.each(fn file_path ->
