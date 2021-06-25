@@ -16,7 +16,7 @@ config :super_issuer, SuperIssuer.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :super_issuer, SuperIssuerWeb.Endpoint,
-  http: [port: 4002],
+  http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
