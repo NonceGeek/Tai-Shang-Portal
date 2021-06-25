@@ -11,9 +11,15 @@
 <p>
   目前各行业对于区块链专业人才的需求越来越大，但区块链专业人才严重缺乏正成为制约行业发展的掣肘之一。未来各地区块链产业园的竞争主要是政策落地力度、产业基础和人才的竞争。柏链教育将联合FISCO  BCOS、世纪互联、中关村区块链产业联盟、金戈教育、头部区块链研发企业等共同发起面向星沙区块链产业园与全国高校的“微芒星辰计划”，旨在为学员们提供线上学习，链上记录的区块链学习计划，以实际行动助力我国数字化区块链产业能力提升与创新。
 </p>
-<center>
-    <h2>证书验证</h2>
-  </center>
+  <center><h2>数据面板</h2></center>
+  <h2>
+      数字身份总数：<%= @payload.acct_num %>
+      <br>
+      承载应用总数：<%= @payload.app_num %>
+      <br>
+      最新块高： <%= @payload.block_best_height %>
+  </h2>
+  <center><h2>证书验证</h2></center>
   <%= form_for @payload.changeset, "/", [multipart: true], fn f -> %>
     <div class="form-group">
     <!--<label>

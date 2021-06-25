@@ -18,6 +18,24 @@ defmodule SuperIssuerWeb.CredentialController do
       })
   end
 
+  @spec credential_handler(%{:claim => any, :cptId => 1 | 100_002, optional(any) => any}) :: %{
+          :claim => any,
+          :cptId => 1 | 100_002,
+          optional(any) => any
+        }
+  @doc """
+    100002: Lesson Study Cred.
+    1: WeLight Node Cred.
+  """
+  def credential_handler(
+    %{
+      cptId: 100002,
+      claim: claim
+    } =credential) do
+      %{credential | claim: claim}
+  end
+
+
   def credential_handler(
     %{
       cptId: 1,
@@ -27,7 +45,7 @@ defmodule SuperIssuerWeb.CredentialController do
         = StructTranslater.str_to_atom_map(claim.representative)
     evidence_value_handled
         = StructTranslater.str_to_atom_map(claim.evidence_info.value)
-    IO.puts inspect claim.evidence_info
+
     evidence_handled =
       claim.evidence_info
       |> Map.put(:value, evidence_value_handled)

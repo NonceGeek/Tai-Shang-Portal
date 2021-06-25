@@ -1,6 +1,6 @@
 defmodule SuperIssuer.App do
   use Ecto.Schema
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
   alias SuperIssuer.{User, App, Contract}
   alias SuperIssuer.Repo
 
@@ -16,6 +16,11 @@ defmodule SuperIssuer.App do
     timestamps()
   end
 
+  def count() do
+    App
+    |> select(count("*"))
+    |> Repo.one()
+  end
   def get_all() do
     Repo.all(App)
   end

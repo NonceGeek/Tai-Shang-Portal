@@ -1,6 +1,7 @@
 defmodule SuperIssuer.Block do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, warn: false
   alias SuperIssuer.Repo
   alias SuperIssuer.{Block, Chain, Tx}
 
@@ -13,6 +14,13 @@ defmodule SuperIssuer.Block do
     timestamps()
   end
 
+  def get_newest() do
+    Repo.one(
+      from b in Block,
+        order_by: [desc: b.id],
+        limit: 1
+    )
+  end
   def preload(ele) do
     Repo.preload(ele, :chain)
   end

@@ -1,6 +1,6 @@
 defmodule SuperIssuer.Account do
   use Ecto.Schema
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
   alias SuperIssuer.{Contract, WeIdentity}
   alias SuperIssuer.Contracts.{Erc20Handler, Erc721Handler}
   alias SuperIssuer.Repo
@@ -110,7 +110,7 @@ defmodule SuperIssuer.Account do
          %{
            "statusOK" => true,
            "transactionHash" => tx_id
-           }}  = payload = Erc20Handler.transfer(chain, erc_20_addr, from, to, amount)
+           }}  = Erc20Handler.transfer(chain, erc_20_addr, from, to, amount)
 
         # Update the balance
         Task.async(fn ->
@@ -201,6 +201,12 @@ defmodule SuperIssuer.Account do
   # +----------------+
   # | Database Funcs |
   # +----------------+
+
+  def count() do
+    Ele
+    |> select(count("*"))
+    |> Repo.one()
+  end
   def preload(ele) do
     Repo.preload(ele, :weidentity)
   end
