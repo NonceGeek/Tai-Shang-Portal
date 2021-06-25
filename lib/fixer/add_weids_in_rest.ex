@@ -4,7 +4,7 @@ defmodule Fixer.AddWeidsInRest do
   alias SuperIssuerWeb.AppController
 
   def handle_weids() do
-    "/home/ubuntu/weid-http-service/dist/keys/priv"
+    "/home/ubuntu/weid-http-service/dist/keys/priv/*"
     |> FileHandler.fetch_files_in_path()
     |> Enum.reject(fn name -> name == "ecdsa_key" end)
     |> Enum.each(fn file_path ->
