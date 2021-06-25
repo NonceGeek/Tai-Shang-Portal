@@ -10,7 +10,7 @@
                 <%= event.tx.tx_hash %>
             </a><br>
             区块高度：
-            <a target="_blank" href= <%= "https://weimang.cyberemd.com/explorer/#/transaction/transactionDetail?pkHash=#{event.tx.block.block_hash}"%>>
+            <a target="_blank" href= <%= "https://weimang.cyberemd.com/explorer/#/block/blockDetail?blockHash=#{event.tx.block.block_hash}"%>>
             <%= event.tx.block.block_height%>
             </a><br>
             时间：

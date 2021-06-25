@@ -1,10 +1,11 @@
 alias SuperIssuer.WeIdentity
 alais SuperIssuerWeb.AppController
-@weid_rest_service_path "todo"
+@weid_rest_service_path "/home/ubuntu/weid-http-service/dist/keys/priv"
 
 def handle_weids() do
   @weid_rest_service_path
   |> FileHandler.fetch_files_in_path()
+  |> Enum.reject(fn name -> name == "ecdsa_key" end)
   |> Enum.each(fn file_path ->
     priv = get_priv(file_path)
     addr =
@@ -24,17 +25,23 @@ def handle_weid(nil, priv, weid, addr) do
   # create weid_local
   {:ok, weidentity} =
     priv
-    |> App.build_weid_params(weid)
+    |> AppController.build_weid_params(weid)
     |> WeIdentity.create()
 
+  # create account local
   handle_weid(weidentity, addr)
-
 end
 
 def handle_weid(%{id: weid_id, weid: weid}, addr) do
   # create account local
   {:ok, _acct} =
     Account.create(%{weidentity_id: weid_id, addr: addr})
+
+  user_name = AppController.generate_user_name("nil")
+  priv_hex = Base.encode16(priv, case: :lower)
+  {:ok, _addr} =
+    WeBaseInteractor.create_account(chain, priv_hex, user_name)
+  IO.puts "create account #{addr} ok!"
 end
 
 def get_priv(path) do
