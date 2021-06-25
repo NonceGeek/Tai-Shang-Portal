@@ -1,5 +1,5 @@
 alias SuperIssuer.WeIdentity
-alais SuperIssuerWeb.AppController
+alias SuperIssuerWeb.AppController
 @weid_rest_service_path "/home/ubuntu/weid-http-service/dist/keys/priv"
 
 def handle_weids() do
