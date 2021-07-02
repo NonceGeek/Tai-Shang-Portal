@@ -53,7 +53,6 @@ defmodule SuperIssuer.MixProject do
       {:poison, "~> 3.1"},
       # crypto
       {:binary, "~> 0.0.5"},
-      {:ex_keccak, "~> 0.2.0"},
       # eth
       {:ex_rlp, "~> 0.5.3"},
       # {:ksha3, "~> 1.0.0", git: "https://github.com/onyxrev/ksha3.git", branch: "master"},

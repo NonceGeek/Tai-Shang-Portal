@@ -45,7 +45,7 @@ defmodule Crypto do
   end
 
   def kec(data) do
-    ExKeccak.hash_256(data)
+    ExSha3.keccak_256(data)
   end
 
   def encrypt_key(key) do
