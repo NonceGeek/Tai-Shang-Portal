@@ -10,7 +10,8 @@ defmodule SuperIssuer.Contracts.Erc721Handler do
     balance_of: "balanceOf",
     total_supply: "totalSupply",
     owner_of: "ownerOf",
-    token_uri: "tokenURI"
+    token_uri: "tokenURI",
+    mint_nft: "mintNft"
   }
 
   @con_template_name "Erc721"
@@ -34,6 +35,20 @@ defmodule SuperIssuer.Contracts.Erc721Handler do
       contract_str,
       Map.get(@func, param),
       [],
+      get_abi()
+    )
+  end
+
+  @doc """
+    mint nft
+  """
+  def mint_nft(chain, contract_addr, caller_addr, receiver_addr, uri) do
+    WeBaseInteractor.handle_tx(
+      chain,
+      caller_addr,
+      contract_addr,
+      @func.mint_nft,
+      [receiver_addr, uri],
       get_abi()
     )
   end

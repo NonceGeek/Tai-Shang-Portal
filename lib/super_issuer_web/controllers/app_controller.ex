@@ -1,6 +1,6 @@
 defmodule SuperIssuerWeb.AppController do
   alias SuperIssuer.{WeIdentity, AppCenter, App, Chain, Contract, ContractTemplate, WeidInteractor}
-  alias SuperIssuer.Contracts.EvidenceHandler
+  alias SuperIssuer.Contracts.{EvidenceHandler, Erc721Handler}
   alias SuperIssuer.{Account, Repo}
   use SuperIssuerWeb, :controller
 
@@ -254,7 +254,10 @@ defmodule SuperIssuerWeb.AppController do
     params_structed,
     conn) do
 
-    %{token_addr: token_addr, addr: addr} = downcase(params_structed)
+    %{
+      token_addr: token_addr,
+      addr: addr
+    } = downcase(params_structed)
 
     %{chain: chain} =
       contract =
@@ -272,7 +275,6 @@ defmodule SuperIssuerWeb.AppController do
   def do_get_ft_balance(app_info, params, conn) do
     handle_error(app_info, params, conn)
   end
-
 
   def transfer_ft(conn, params) do
     params_structed =
@@ -369,6 +371,38 @@ defmodule SuperIssuerWeb.AppController do
       }
     end)
   end
+
+  @doc """
+    [api]/mint_nft
+  """
+
+  def mint_nft(conn, params) do
+    params_structed =
+      params
+      |> StructTranslater.to_atom_struct()
+      |> downcase()
+    params_structed
+    |> auth()
+    |> do_mint_nft(params_structed, conn)
+  end
+
+  def do_mint_nft({:ok, _}, params_structed, conn) do
+    %{token_addr: token_addr, uri: uri,signer: signer, addr: addr} =
+      params_structed
+
+    %{chain: chain} =
+        token_addr
+        |> Contract.get_by_addr()
+        |> Contract.preload()
+    {:ok, %{"output" => opt, "statusOK" => status}} =
+      Erc721Handler.mint_nft(chain, token_addr, signer, addr, uri)
+    json(conn, %{"output" => opt, "statusOk" => status})
+  end
+
+  def do_mint_nft(payload, _params, conn) do
+    handle_error(payload, conn)
+  end
+
   def handle_error({:error, info}, conn) do
     payload =
       @resp_failure
