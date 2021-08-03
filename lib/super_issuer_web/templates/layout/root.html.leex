@@ -7,7 +7,6 @@
     <title><%= assigns[:page_title] || "微芒 · 星辰" %></title>
     <%= csrf_meta_tag() %>
 
-
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/bootstrap.min.css") %>"/>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/bootstrap.bundle.min.js") %>"></script>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
@@ -58,6 +57,9 @@
             <%# <li class="nav-item">
               <a class="nav-link active" href="https://cheatsheet.cyberemd.com" >知识库</a>
             </li> %>
+            <li class="nav-item">
+              <a class="nav-link active" href="/live/service_lottery">抽奖服务</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link active" href="/live/app">应用浏览</a>
             </li>

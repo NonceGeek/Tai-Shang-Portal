@@ -1,0 +1,39 @@
+
+<div style="width:30% ;margin: 0 auto;">
+    <%= if is_nil(@coupon) do%>
+    <form phx-submit="submit_coupon">
+        <br>
+        <div>
+            <span class="input-group-text" id="inputGroup-sizing-lg">输入使用券Id</span>
+            <input name="coupon" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+        </div>
+        <br>
+        <center>
+            <button type="submit" class="btn btn-info">提交！</button>
+        </center>
+    </form>
+    <% else %>
+    <form phx-submit="submit_lottery">
+        <div>
+            <span class="input-group-text" id="basic-addon1">输入抽奖人范围（如FISCO BCOS 代码贡献者）</span>
+            <input name="group" type="text" class="form-control" aria-label="Sizing example input">
+        </div>
+        <div>
+            <span class="input-group-text" id="basic-addon1">输入奖品名称（如Go语言入门课程）</span>
+            <input name="prize" type="text" class="form-control" aria-label="Sizing example input">
+        </div>
+        <div>
+            <span class="input-group-text" id="basic-addon1">输入抽奖人数量</span>
+            <input name="person_num" type="text" class="form-control" aria-label="Sizing example input">
+        </div>
+        <div>
+            <span class="input-group-text" id="basic-addon1">输入抽奖个数</span>
+            <input name="prize_num" type="text" class="form-control" aria-label="Sizing example input">
+        </div>
+        <br>
+        <center>
+            <button type="submit" class="btn btn-info">抽奖！</button>
+        </center>
+    </form>
+    <% end %>
+</div>

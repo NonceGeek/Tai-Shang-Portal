@@ -11,7 +11,7 @@ defmodule SuperIssuerWeb.Router do
   end
 
   pipeline :api_allow_cross do
-    plug CORSPlug
+    plug CORSPlug, origin: ["*"]
     plug :accepts, ["json"]
   end
 
@@ -46,6 +46,8 @@ defmodule SuperIssuerWeb.Router do
     live "/live/event", EventLive
 
     live "/live/app", AppLive
+
+    live "/live/service_lottery", LotteryLive
     # live "/live/admin", AdminLive
 
     # live "/", PageLive, :index
