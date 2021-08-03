@@ -68,12 +68,13 @@ defmodule SuperIssuerWeb.Router do
     get "/ft/get_balance", AppController, :get_ft_balance
     post "/ft/transfer", AppController, :transfer_ft
 
+    post "/nft/mint", AppController, :mint_nft
   end
 
   scope "/welight/api/v1", SuperIssuerWeb do
     pipe_through :api_allow_cross
     get "/nft/get_balance", AppController, :get_nft_balance
-    post "/nft/mint", AppController, :mint_nft
+
   end
 
   # ports that allow cross domain
