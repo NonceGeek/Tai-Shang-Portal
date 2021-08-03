@@ -11,7 +11,7 @@ defmodule SuperIssuerWeb.Router do
   end
 
   pipeline :api_allow_cross do
-    plug CORSPlug, origin: ["*"]
+    plug CORSPlug, origin: [~r/.*/]
     plug :accepts, ["json"]
   end
 
