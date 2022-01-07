@@ -59,7 +59,7 @@ defmodule SuperIssuer.MixProject do
       # {:keccakf1600, "~> 3.0.0"},
       # ecto
       {:ecto_enum, "~> 1.2"},
-      # for login
+      # for user
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       # live clock example

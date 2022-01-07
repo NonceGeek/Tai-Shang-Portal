@@ -74,7 +74,7 @@ defmodule SuperIssuerWeb.Router do
   scope "/welight/api/v1", SuperIssuerWeb do
     pipe_through :api_allow_cross
     get "/nft/get_balance", AppController, :get_nft_balance
-
+    get "/nft/test", AppController, :test
   end
 
   # ports that allow cross domain
@@ -92,7 +92,7 @@ defmodule SuperIssuerWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: SuperIssuerWeb.Telemetry
+      # live_dashboard "/dashboard", metrics: SuperIssuerWeb.Telemetry
     end
   end
 end

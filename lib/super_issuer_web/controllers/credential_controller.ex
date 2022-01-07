@@ -1,6 +1,7 @@
 defmodule SuperIssuerWeb.CredentialController do
   use SuperIssuerWeb, :controller
 
+  @credit_top_level 10
   @explorer_prefix "https://weimang.cyberemd.com/explorer/#/transaction/transactionDetail?pkHash="
   def index(conn, params) do
     credential =
@@ -29,12 +30,24 @@ defmodule SuperIssuerWeb.CredentialController do
   """
   def credential_handler(
     %{
-      cptId: 100002,
+      cptId: 100_002,
       claim: claim
-    } =credential) do
+    } =credential)  do
       %{credential | claim: claim}
   end
 
+  def credential_handler(
+    %{
+      cptId: 100_003,
+      claim: claim
+    } =credential) do
+
+    %{
+      credential | claim:
+      claim
+      |> handle_credit_level()
+    }
+  end
 
   def credential_handler(
     %{
@@ -55,6 +68,14 @@ defmodule SuperIssuerWeb.CredentialController do
       |> Map.put(:representative, repre_handled)
       |> Map.put(:evidence_info, evidence_handled)
     %{credential | claim: claim}
+  end
+
+  def handle_credit_level(%{credit_level: credit_level} = claim) do
+    credit_handled =
+      "☆"
+      |> String.duplicate(@credit_top_level - credit_level)
+      |> Kernel.<>(String.duplicate("★", credit_level))
+    Map.put(claim, :credit_level, credit_handled)
   end
 
   def clean_session(conn) do

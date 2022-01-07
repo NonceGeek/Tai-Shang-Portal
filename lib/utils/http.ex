@@ -102,8 +102,8 @@ defmodule Http do
       {:ok, json_body} ->
         {:ok, json_body}
 
-      {:error, _} ->
-        Logger.error("Reason: #{status_code}")
+      {:error, payload} ->
+        Logger.error("Reason: #{inspect(payload)}")
         {:error, :network_error}
     end
   end

@@ -52,6 +52,14 @@ defmodule Crypto do
     encrypt_key(key, @secret_key)
   end
 
+  @spec encrypt_key(
+          binary,
+          binary
+          | maybe_improper_list(
+              binary | maybe_improper_list(any, binary | []) | byte,
+              binary | []
+            )
+        ) :: any
   def encrypt_key(key, password) do
     md5_pwd = md5(password)
     :crypto.block_encrypt(:aes_ecb, md5_pwd, pad(key, 16))

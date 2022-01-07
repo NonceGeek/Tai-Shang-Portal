@@ -32,6 +32,10 @@ defmodule SuperIssuerWeb.AppController do
     |> do_get_contracts(conn)
   end
 
+  def test(conn, _params) do
+    json(conn, %{result: "ok"})
+  end
+
   def auth(%{app_id: id, secret_key: secret_key}) do
     with {:ok, app} <- App.handle_result(App.get_by_id(id)),
         true <- AppCenter.key_correct?(app, secret_key) do

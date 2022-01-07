@@ -2,10 +2,8 @@ defmodule SuperIssuer.WeidInteractor do
   @moduledoc """
     Adapter to Weid Restful Service.
     Waiting for recognizeAuthorityIssuer().
-
-
   """
-
+  alias SuperIssuer.Chain
   require Logger
 
   @weid_path "/weid/api/"
@@ -31,7 +29,6 @@ defmodule SuperIssuer.WeidInteractor do
   @doc """
     create weid hosting by weid-restful-service
   """
-
   def exist?(chain, weid) do
 
     chain
@@ -62,6 +59,14 @@ defmodule SuperIssuer.WeidInteractor do
     |> handle_result()
   end
 
+  @spec create_credential(Chain.t(), String.t(), integer(), map()) :: any()
+  def create_credential(chain, issuer, cpt_id, claim) do
+    # TODO
+  end
+
+  def build_credential_payload(issuer, cpt_id, claim) do
+    # TODO
+  end
   def register_authority_issuer(:test, _, _, _, _) do
   end
 

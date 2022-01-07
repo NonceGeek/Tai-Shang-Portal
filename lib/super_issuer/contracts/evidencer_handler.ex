@@ -65,8 +65,6 @@ defmodule SuperIssuer.Contracts.EvidenceHandler do
   end
 
   def do_new_evidence(chain, deployer_addr, contract_addr, evidence) do
-    IO.puts deployer_addr
-    IO.puts contract_addr
     {:ok, %{"transactionHash" => tx_id, "logs" => logs}} =
       WeBaseInteractor.handle_tx(
         chain,
