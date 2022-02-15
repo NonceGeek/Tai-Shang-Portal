@@ -113,8 +113,7 @@ defmodule SuperIssuer.Contracts.EvidenceHandler do
 
   def evi_valid?(evidence) do
     evi_handled =
-      evidence
-      |> String.replace("\'","\"")
+      String.replace(evidence, "\'","\"")
 
 
     with {:ok, evi_decoded} <- Poison.decode(evi_handled),
