@@ -40,8 +40,8 @@ defmodule SuperIssuer.Repo.Migrations.AddContractAbiAndChain do
       add :chain_id, :integer
     end
 
-    alter table :weidentity do
-      add :chain_id, :integer
-    end
+    # alter table :weidentity do
+    #   add :chain_id, :integer
+    # end
   end
 end

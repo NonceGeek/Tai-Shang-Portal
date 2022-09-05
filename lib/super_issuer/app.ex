@@ -9,8 +9,8 @@ defmodule SuperIssuer.App do
     field :name, :string
     field :description, :string
     field :encrypted_secret_key, :binary
+    field :chain_tags, {:array, :string}
     field :contract_id_list, {:array, :integer}
-    field :weid_permission, :integer
     field :url, :string
     belongs_to :user, User
     timestamps()
@@ -76,7 +76,7 @@ defmodule SuperIssuer.App do
   @doc false
   def changeset(%App{} = app, attrs) do
     app
-    |> cast(attrs, [:name, :encrypted_secret_key, :description, :contract_id_list, :url, :weid_permission, :user_id])
+    |> cast(attrs, [:name, :encrypted_secret_key, :description, :contract_id_list, :url, :chain_tags])
     |> unique_constraint(:name)
     |> validate_required([:name, :encrypted_secret_key])
     |> update_change(:encrypted_secret_key, &Crypto.encrypt_key/1)

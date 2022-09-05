@@ -7,7 +7,6 @@ defmodule SuperIssuer.Repo.Migrations.CreateContractAndEvidence do
       add :type, :string
       add :describe, :string
       add :creater, :string
-      add :init_params, :map
 
       timestamps()
     end

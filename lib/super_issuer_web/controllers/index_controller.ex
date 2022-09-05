@@ -7,7 +7,7 @@ defmodule SuperIssuerWeb.IndexController do
 
   @payload %{
     name: "微芒·星辰区块链产业人才培养计划",
-    slogan: "分布式 | 无边界 | 未来学院",
+    slogan: "",
     credetialverifier: %CredentialVerifier{},
     changeset: nil,
     verify_result: nil

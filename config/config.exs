@@ -10,6 +10,9 @@ use Mix.Config
 config :super_issuer,
   ecto_repos: [SuperIssuer.Repo]
 
+config :ethereumex,
+  http_options: [pool_timeout: 5000, receive_timeout: 15_000],
+  http_headers: [{"Content-Type", "application/json"}]
 # Configures the endpoint
 config :super_issuer, SuperIssuerWeb.Endpoint,
   url: [host: "localhost"],

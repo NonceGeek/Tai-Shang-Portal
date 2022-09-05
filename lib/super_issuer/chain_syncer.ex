@@ -18,6 +18,7 @@ defmodule SuperIssuer.ChainSyncer do
   end
 
   def init(chain_name) do
+    Logger.info("#{chain_name}")
     chain = Chain.get_by_name(chain_name)
     do_init(chain)
   end

@@ -13,8 +13,6 @@ defmodule SuperIssuer.Event do
     field :log_index, :integer
     field :ref_nft, :string
     field :ref_contract_addr, :string
-    field :ref_operator, :string
-    field :ref_weid, :string
     belongs_to :tx, Tx
     timestamps()
   end
@@ -56,6 +54,6 @@ defmodule SuperIssuer.Event do
   @doc false
   def changeset(%Event{} = ele, attrs) do
     ele
-    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height, :ref_nft, :ref_contract_addr, :ref_operator, :ref_weid])
+    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height, :ref_nft, :ref_contract_addr])
   end
 end

@@ -10,7 +10,6 @@ defmodule SuperIssuer.Chain do
     field :adapter, :string
     field :config, :map
     field :height_now, :integer
-    has_many :weidentity, WeIdentity
     has_many :contract, Contract
     timestamps()
   end
@@ -26,7 +25,7 @@ defmodule SuperIssuer.Chain do
   end
   def preload(ele) do
     ele
-    |> Repo.preload([:contract, :weidentity])
+    |> Repo.preload([:contract])
   end
 
   def get_all() do

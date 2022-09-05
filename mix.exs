@@ -66,7 +66,17 @@ defmodule SuperIssuer.MixProject do
       {:nimble_strftime, ">= 0.0.0"},
 
       # cross domain
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+
+      #ethereum
+      {:ethereumex, "~> 0.9"},
+      {:ex_abi, "~> 0.5.2"},
+      # struct handler
+      {:ex_struct_translator, "~> 0.1.1"},
+      {:ecto, "~> 3.5.5", override: true},
+
+      # markdown
+      {:earmark, "~> 1.4"},
     ]
   end
 
