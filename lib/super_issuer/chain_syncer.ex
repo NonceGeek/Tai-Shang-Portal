@@ -13,8 +13,13 @@ defmodule SuperIssuer.ChainSyncer do
   # +-----------+
   # | GenServer |
   # +-----------+
+
   def start_link(chain_name) do
     GenServer.start_link(__MODULE__, chain_name, name: :"#{chain_name}_syncer")
+  end
+
+  def init(chain_name) when is_nil(chain_name) do
+    :do_nothing
   end
 
   def init(chain_name) do
