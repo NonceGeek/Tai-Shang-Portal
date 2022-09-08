@@ -62,7 +62,7 @@ defmodule Crypto do
         ) :: any
   def encrypt_key(key, password) do
     md5_pwd = md5(password)
-    :crypto.block_encrypt(:aes_ecb, md5_pwd, pad(key, 16))
+    :crypto.public_encrypt(:aes_ecb, md5_pwd, pad(key, 16), true)
   end
 
   def decrypt_key(key) do
@@ -72,7 +72,7 @@ defmodule Crypto do
     md5_pwd = md5(password)
 
     :aes_ecb
-    |> :crypto.block_decrypt(md5_pwd, encrypted_key)
+    |> :crypto.public_decrypt(md5_pwd, encrypted_key)
     |> unpad()
   end
 
