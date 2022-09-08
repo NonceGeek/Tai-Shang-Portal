@@ -4,16 +4,9 @@ defmodule Crypto do
   """
 
   @secret_key Application.get_env(:super_issuer, :secret_key)
-
+  @iv Application.get_env(:super_issuer, :iv)
   def sha256(data), do: :crypto.hash(:sha256, data)
   def ripemd160(data), do: :crypto.hash(:ripemd160, data)
-  @spec double_sha256(
-          binary
-          | maybe_improper_list(
-              binary | maybe_improper_list(any, binary | []) | byte,
-              binary | []
-            )
-        ) :: binary
   def double_sha256(data), do: data |> sha256 |> sha256
 
   def secp256k1_verify(data, sig, pubkey) do
@@ -52,17 +45,10 @@ defmodule Crypto do
     encrypt_key(key, @secret_key)
   end
 
-  @spec encrypt_key(
-          binary,
-          binary
-          | maybe_improper_list(
-              binary | maybe_improper_list(any, binary | []) | byte,
-              binary | []
-            )
-        ) :: any
   def encrypt_key(key, password) do
     md5_pwd = md5(password)
-    :crypto.public_encrypt(:aes_ecb, md5_pwd, pad(key, 16), true)
+    # :crypto.block_encrypt(:aes_ecb, md5_pwd, pad(key, 16))
+    :crypto.crypto_one_time(:aes_256_cbc, md5_pwd, @iv, Crypto.pad(key, 16), true)
   end
 
   def decrypt_key(key) do
@@ -71,22 +57,21 @@ defmodule Crypto do
   def decrypt_key(encrypted_key, password) do
     md5_pwd = md5(password)
 
-    :aes_ecb
-    |> :crypto.public_decrypt(md5_pwd, encrypted_key)
+    :crypto.crypto_one_time(:aes_256_cbc, md5_pwd, @iv, encrypted_key, false)
     |> unpad()
   end
 
-  defp pad(data, block_size) do
+  def pad(data, block_size) do
     to_add = block_size - rem(byte_size(data), block_size)
     data <> to_string(:string.chars(to_add, to_add))
   end
 
-  defp unpad(data) do
+  def unpad(data) do
     to_remove = :binary.last(data)
     :binary.part(data, 0, byte_size(data) - to_remove)
   end
 
-  defp md5(data) do
+  def md5(data) do
     :md5
     |> :crypto.hash(data)
     |> Base.encode16(case: :lower)
