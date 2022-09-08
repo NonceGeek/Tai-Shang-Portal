@@ -72,18 +72,18 @@ defmodule SuperIssuer.Chain.Venachain do
   def handle_txs(txs, %{config: %{"node" => node}} = _chain, height) do
     Logger.info("syncing block: #{height}")
     Enum.map(txs, fn tx ->
-      tx_hash =
-      if is_binary(tx) do
-        tx
-      else
-        %{hash: hash} = tx
-        hash
-      end
+      tx_hash = tx_to_hash(tx)
       Logger.info("tx_hash: #{tx_hash}")
       tx_hash
       |> HttpClient.eth_get_transaction_receipt([url: node])
       |> handle_receipt(height)
     end)
+  end
+
+  def tx_to_hash(tx) when is_binary(tx), do: tx
+  def tx_to_hash(tx) do
+    %{hash: hash} = tx
+    hash
   end
 
   def filter_txs(txs) do
