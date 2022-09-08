@@ -83,7 +83,10 @@ defmodule SuperIssuerWeb.IndexController do
 
     acct_num = Account.count()
     app_num = App.count()
-    block_best_height = Block.get_newest().block_height
+    block_best_height =
+      1
+      |> Chain.get_by_id()
+      |> Map.get(:height_now)
 
     payload = %{@payload | changeset: changeset}
     payload

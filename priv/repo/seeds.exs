@@ -16,7 +16,8 @@ alias SuperIssuer.Chain
     adapter: "Venachain",
     name: "Venachain",
     config: %{
-      "node" => "http://124.251.110.210:6791"
+      # "node" => "http://124.251.110.210:6791"
+      "node" => "http://172.21.1.2:6791"
     }
   })
 
