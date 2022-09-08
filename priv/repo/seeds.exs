@@ -40,14 +40,14 @@ c = %{
 }
 Contract.create(c)
 
-c_3 = %{
+c_2 = %{
   contract_template_id: c_id,
   chain_id: id,
   addr: "0xf415aa9df3595797f74a753baeb1b831a316caaf", # 210
   creater: "0xbc98fff44b9de6957515c809d5a17e311987444a",
   description: "DAOSoulCard, web3 namecard focus on Orgs."
 }
-Contract.create(c)
+Contract.create(c_2)
 
 c_t_2 = %{
   name: "did",
@@ -57,14 +57,14 @@ c_t_2 = %{
 
 {:ok, %{id: c_id_2}} = ContractTemplate.create(c_t_2)
 
-c_2 = %{
+c_3 = %{
   contract_template_id: c_id_2,
   chain_id: id,
   addr: "0xa2f3f3f3bcf24a10e8c3b8a243ddffb3575dc24c",
   creater: "0xbc98fff44b9de6957515c809d5a17e311987444a",
   description: "A simple DID impletation"
 }
-Contract.create(c_2)
+Contract.create(c_3)
 
 # init app
 
