@@ -70,7 +70,16 @@ defmodule SuperIssuer.Chain.Venachain do
 
   # Tx Funcs
   def handle_txs(txs, %{config: %{"node" => node}} = _chain, height) do
-    Enum.map(txs, fn %{hash: tx_hash} ->
+    Logger.info("syncing block: #{height}")
+    Enum.map(txs, fn tx ->
+      tx_hash =
+      if is_binary(tx) do
+        tx
+      else
+        %{hash: hash} = tx
+        hash
+      end
+      Logger.info("tx_hash: #{tx_hash}")
       tx_hash
       |> HttpClient.eth_get_transaction_receipt([url: node])
       |> handle_receipt(height)
