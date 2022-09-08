@@ -73,7 +73,7 @@ app = %{
   description: "Web3 Name Card focus on Buidlers",
   encrypted_secret_key: "12345678",
   chain_tags: ["venachain"],
-  contract_id_list: [c, c2],
+  contract_id_list: [c, c_2],
   url: "https://soulcard.noncegeek.com"
 }
 
