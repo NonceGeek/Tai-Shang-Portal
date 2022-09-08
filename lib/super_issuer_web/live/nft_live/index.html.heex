@@ -1,0 +1,26 @@
+<div style="width:80%;margin: 0 auto;" x-data>
+    <br>
+    <center><h3>SoulCard SBTs</h3></center>
+    <%= raw(Earmark.as_html!("**Addr:** #{@contract.addr}\n\n**Desciprtion:** #{@contract.description}\n\n**Creator:** #{@contract.creater}
+    ")) %>
+
+    <%= for nft <- @nfts do %>
+        <div class="card">
+            <br>
+            <center>
+            <iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" scrolling="yes" sandbox="allow-scripts; allow-popups-to-escape-sandbox" style="width: 400px" src={nft.uri["payload"]["external_url"]} />
+            </center>
+
+        <div class="card-body">
+        <%= raw(Earmark.as_html!(
+            "
+- **token id:** #{nft.token_id}
+- **owner:** #{nft.owner}
+- **see full SBT new tab:** [#{nft.uri["payload"]["external_url"]}](#{nft.uri["payload"]["external_url"]})
+"))%>
+
+        </div>
+    </div>
+    <% end %>
+
+</div>

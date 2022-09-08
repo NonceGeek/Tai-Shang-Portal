@@ -10,6 +10,7 @@ defmodule SuperIssuer.ContractTemplate do
     field :name, :string
     field :abi, {:array, :map}
     field :bin, :string
+    field :source_code, :string
   end
 
   # +-----------------------------+
@@ -95,6 +96,6 @@ defmodule SuperIssuer.ContractTemplate do
   @doc false
   def changeset(%Ele{} = ele, attrs) do
     ele
-    |> cast(attrs, [:name, :abi, :bin])
+    |> cast(attrs, [:name, :abi, :bin, :source_code])
   end
 end

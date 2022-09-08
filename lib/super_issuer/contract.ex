@@ -1,19 +1,18 @@
 defmodule SuperIssuer.Contract do
   use Ecto.Schema
   import Ecto.Changeset
-  alias SuperIssuer.{Chain, Contract, Evidence, ContractTemplate}
+  alias SuperIssuer.{Chain, Contract, Evidence, ContractTemplate, Repo}
   alias SuperIssuer.Contracts.EvidenceHandler
-  alias SuperIssuer.Repo
+  alias SuperIssuer.Nft
 
   schema "contract" do
     field :addr, :string
     field :description, :string
     field :creater, :string
-    # field :init_params, :map
     field :erc721_total_num, :integer
     belongs_to :chain, Chain
     belongs_to :contract_template, ContractTemplate
-    has_many :evidence, Evidence
+    has_many :nfts, Nft
     timestamps()
   end
 
@@ -51,7 +50,7 @@ defmodule SuperIssuer.Contract do
   end
 
   def preload(contract) do
-    Repo.preload(contract, [:chain, :contract_template])
+    Repo.preload(contract, [:chain, :contract_template, :nfts])
   end
 
   def handle(contract, _init_params) do

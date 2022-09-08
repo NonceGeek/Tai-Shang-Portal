@@ -22,24 +22,37 @@ alias SuperIssuer.Chain
 
 alias SuperIssuer.{ContractTemplate, Contract}
 
+
 # add contract templates & contract
 c_t = %{
-  name: "soul_card_nft",
-  abi: Poison.decode!(File.read!("contracts/soulcard/soul_card.abi")),
+  name: "soul_card_sbt",
+  abi: Poison.decode!(File.read!("contracts/soulcard/SoulCard.abi")),
+  source_code: File.read!("contracts/soulcard/SoulCard.sol"),
 }
 {:ok, %{id: c_id}} = ContractTemplate.create(c_t)
 c = %{
   contract_template_id: c_id,
   chain_id: id,
-  addr: "0xfd79c740acf9b8b5de825024d8c62919374eb90a",
+  # addr: "0x545edf91e91b96cfa314485f5d2a1757be11d384", # local
+  addr: "0x8b8af2bb13f8907de07ee94db76ff4980a7314fd", # 210
   creater: "0xbc98fff44b9de6957515c809d5a17e311987444a",
-  description: "SoulCard"
+  description: "SoulCard, web3 namecard focus on buidlers"
+}
+Contract.create(c)
+
+c_3 = %{
+  contract_template_id: c_id,
+  chain_id: id,
+  addr: "0xf415aa9df3595797f74a753baeb1b831a316caaf", # 210
+  creater: "0xbc98fff44b9de6957515c809d5a17e311987444a",
+  description: "DAOSoulCard, web3 namecard focus on Orgs."
 }
 Contract.create(c)
 
 c_t_2 = %{
   name: "did",
-  abi: Poison.decode!(File.read!("contracts/soulcard/soul_card.abi")),
+  abi: Poison.decode!(File.read!("contracts/did/EthereumDIDRegistry.abi")),
+  source_code: File.read!("contracts/did/EthereumDIDRegistry.sol"),
 }
 
 {:ok, %{id: c_id_2}} = ContractTemplate.create(c_t_2)
@@ -49,7 +62,7 @@ c_2 = %{
   chain_id: id,
   addr: "0xa2f3f3f3bcf24a10e8c3b8a243ddffb3575dc24c",
   creater: "0xbc98fff44b9de6957515c809d5a17e311987444a",
-  description: "DID"
+  description: "A simple DID impletation"
 }
 Contract.create(c_2)
 
@@ -60,6 +73,7 @@ app = %{
   description: "Web3 Name Card focus on Buidlers",
   encrypted_secret_key: "12345678",
   chain_tags: ["venachain"],
+  contract_id_list: [c, c2],
   url: "https://soulcard.noncegeek.com"
 }
 

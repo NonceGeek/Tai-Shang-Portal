@@ -15,7 +15,7 @@ defmodule SuperIssuer.Tx do
   end
 
   def preload(ele) do
-    Repo.preload(ele, :block)
+    Repo.preload(ele, [:block, :contract])
   end
 
   def get_by_hash(ele) do

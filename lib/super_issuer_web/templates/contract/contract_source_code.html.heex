@@ -1,0 +1,6 @@
+<br>
+<div style="width:100%;margin: 0 auto;" x-data>
+<%= raw(Earmark.as_html!("```javascript
+#{@contract_template.source_code}
+```")) %>
+</div>

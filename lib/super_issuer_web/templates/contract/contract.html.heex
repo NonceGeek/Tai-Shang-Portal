@@ -1,0 +1,23 @@
+<div style="width:30%;margin: 0 auto;" x-data>
+<p><%= live_flash(@flash, :info) %></p>
+<p><%= live_flash(@flash, :error) %></p>
+<%= for contract <- @contracts  do%>
+    <div class="card">
+        <div class="card-header">
+            应用编号： <%= "0x#{contract.id}" %>
+        </div>
+        <center>
+        <div class="card-body">
+            <p><b>addr:</b> <%= contract.addr %></p>
+            <p><%= raw(Earmark.as_html!("** chain:** `#{contract.chain.name}`")) %></p>
+            <p><b> description:</b> <%= contract.description %></p>
+            <div x-data={"{ abi: '#{Poison.encode!(contract.contract_template.abi)}'}"}>
+                <button @click="navigator.clipboard.writeText(abi);">copy abi</button>
+            </div>
+            <a href={"/live/contracts/source_code?template_id=#{contract.contract_template.id}"} target="_blank"><button>see souce code</button></a>
+            <hr>
+        </div>
+        </center>
+    </div>
+<% end %>
+</div>

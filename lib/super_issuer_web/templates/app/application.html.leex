@@ -15,6 +15,11 @@
                     <%= raw(Earmark.as_html!("`#{ele}` "))%>
                 <% end %>
             </h5>
+            <h5 class="card-title"><b>Contracts: </b>
+                <a href="/live/contracts">
+                    <%= inspect(app.contract_id_list)%>
+                </a>
+            </h5>
             <a type="button" target="_blank" href="<%= app.url%>" class="btn btn-warning btn-lg" style="width:200px">查看应用</a>
         </div>
         </center>

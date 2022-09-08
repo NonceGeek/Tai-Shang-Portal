@@ -8,23 +8,34 @@ defmodule SuperIssuerWeb.ContractLive do
     ContractView.render("contract.html", assigns)
   end
 
-  def mount(_params, %{
-    "current_user_id" => id
-  }, socket) do
-    user = User.get_by_user_id(id)
+  def mount(_params, _session, socket) do
     contracts =
       Contract.get_all()
-      |> Enum.map(fn contract ->
-        contract
-        |> Map.put(:init_params, Poison.encode!(contract.init_params))
-      end)
+      |> Enum.map(&(Contract.preload(&1)))
     {:ok,
       socket
-      |> do_mount(user)
+      # |> do_mount(user)
       |> assign(contracts: contracts)
       |> init_chain()
     }
   end
+  # def mount(_params, %{
+  #   "current_user_id" => id
+  # }, socket) do
+  #   user = User.get_by_user_id(id)
+  #   contracts =
+  #     Contract.get_all()
+  #     |> Enum.map(fn contract ->
+  #       contract
+  #       |> Map.put(:init_params, Poison.encode!(contract.init_params))
+  #     end)
+  #   {:ok,
+  #     socket
+  #     |> do_mount(user)
+  #     |> assign(contracts: contracts)
+  #     |> init_chain()
+  #   }
+  # end
 
   def init_chain(socket) do
     chains =
@@ -44,12 +55,12 @@ defmodule SuperIssuerWeb.ContractLive do
     |> assign(types: types)
   end
 
-  def mount(_params, _, socket) do
-    {:ok,
-    socket
-    |> redirect(to: "/")
-  }
-  end
+  # def mount(_params, _, socket) do
+  #   {:ok,
+  #   socket
+  #   |> redirect(to: "/")
+  # }
+  # end
 
   def do_mount(socket, %{group: 1}) do
     changeset = Contract.changeset(%Contract{})
