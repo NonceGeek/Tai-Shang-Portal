@@ -19,7 +19,7 @@ defmodule SuperIssuer.ChainSyncer do
   end
 
   def init(chain_name) when is_nil(chain_name) do
-    :do_nothing
+    {:ok, :do_nothing}
   end
 
   def init(chain_name) do
