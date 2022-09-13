@@ -3,8 +3,8 @@ defmodule SuperIssuerWeb.TxLive.Index do
     alias SuperIssuer.Tx
 
     @impl true
-    def mount(%{"tx_id" => tx_id}, _session, socket) do
-      {:ok, init(socket, tx_id)}
+    def mount(%{"hash" => tx_hash}, _session, socket) do
+      {:ok, init(socket, tx_hash)}
     end
 
     @impl true
@@ -12,9 +12,9 @@ defmodule SuperIssuerWeb.TxLive.Index do
       {:noreply, socket}
     end
 
-    def init(socket, tx_id) do
+    def init(socket, tx_hash) do
       tx =
-        tx_id
+        tx_hash
         |> Tx.get_by_hash()
         |> Tx.preload()
 
