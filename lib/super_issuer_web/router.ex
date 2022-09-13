@@ -42,18 +42,12 @@ defmodule SuperIssuerWeb.Router do
 
     live "/live/nft", NftLive.Index
 
-    live "/live/top", TopLive
-
-
+    live "/live/tx", TxLive.Index
 
     live "/live/event", EventLive
 
     live "/live/app", AppLive
 
-    live "/live/service_lottery", LotteryLive
-    # live "/live/admin", AdminLive
-
-    # live "/", PageLive, :index
   end
 
   # Other scopes may use custom stacks.

@@ -71,7 +71,7 @@ defmodule SuperIssuer.ChainSyncer do
   end
 
   def do_sync_chain(chain, adapter, latest_height, height_now) do
-    Enum.map(latest_height..height_now + 1, fn height ->
+    Enum.map(latest_height..(height_now + 1), fn height ->
         adapter.sync_block(chain, height)
       end)
   end

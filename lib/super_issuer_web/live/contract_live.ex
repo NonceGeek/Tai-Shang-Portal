@@ -8,13 +8,36 @@ defmodule SuperIssuerWeb.ContractLive do
     ContractView.render("contract.html", assigns)
   end
 
+  def mount(%{"contract_addr" => contract_addr}, _session, socket) do
+    contract =
+      contract_addr
+      |> Contract.get_by_addr()
+      |> Contract.preload()
+    {:ok,
+      socket
+      |> assign(contracts: [contract])
+      |> init_chain()
+    }
+  end
+
+  def mount(%{"contract_id" => contract_id}, _session, socket) do
+    contract =
+      contract_id
+      |> Contract.get_by_id()
+      |> Contract.preload()
+    {:ok,
+      socket
+      |> assign(contracts: [contract])
+      |> init_chain()
+    }
+  end
+
   def mount(_params, _session, socket) do
     contracts =
       Contract.get_all()
       |> Enum.map(&(Contract.preload(&1)))
     {:ok,
       socket
-      # |> do_mount(user)
       |> assign(contracts: contracts)
       |> init_chain()
     }

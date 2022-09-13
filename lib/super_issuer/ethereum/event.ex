@@ -4,6 +4,7 @@ defmodule SuperIssuer.Ethereum.Event do
 
   @type t :: %Event{name: String.t(), args: list(Argument.t())}
   defstruct [:name, :args]
+  # todo: add sig as func
 
   def get_signature(%Event{name: name, args: args}) do
     hash =

@@ -3,7 +3,7 @@ defmodule SuperIssuer.Event do
   import Ecto.Changeset
   import Ecto.Query, warn: false
   alias SuperIssuer.Repo
-  alias SuperIssuer.{Tx, Event}
+  alias SuperIssuer.{Tx, Event, Nft}
 
   schema "event" do
     field :topics, {:array, :string}
@@ -11,8 +11,8 @@ defmodule SuperIssuer.Event do
     field :address, :string
     field :block_height, :integer
     field :log_index, :integer
-    field :ref_nft, :string
-    field :ref_contract_addr, :string
+    field :event_decoded, :map
+    belongs_to :nft, Nft
     belongs_to :tx, Tx
     timestamps()
   end
@@ -54,6 +54,6 @@ defmodule SuperIssuer.Event do
   @doc false
   def changeset(%Event{} = ele, attrs) do
     ele
-    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height, :ref_nft, :ref_contract_addr])
+    |> cast(attrs, [:topics, :data, :tx_id, :address, :log_index, :block_height, :nft_id])
   end
 end

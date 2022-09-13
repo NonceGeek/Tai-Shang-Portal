@@ -6,20 +6,17 @@
         <div class="card-header">
             事件编号： # <%= event.id %><br>
             所在交易：
-            <a target="_blank" href= <%= "https://weimang.cyberemd.com/explorer/#/transaction/transactionDetail?pkHash=#{event.tx.tx_hash}"%>>
-                <%= event.tx.tx_hash %>
-            </a><br>
+                <%= event.tx.tx_hash %><br>
             区块高度：
-            <a target="_blank" href= <%= "https://weimang.cyberemd.com/explorer/#/block/blockDetail?blockHash=#{event.tx.block.block_hash}"%>>
             <%= event.tx.block.block_height%>
-            </a><br>
+            <br>
             时间：
             <%= DateTime.from_unix!(event.tx.block.timestamp, :millisecond) %>
         </div>
         <div class="card-body">
             <!-- <%= inspect(event) %> -->
             <h5 class="card-title">
-                <b>事件名称：</b><%= event.obvious_event.event.name %>
+                <b>事件名称：</b><%= event.event_decoded.event.name %>
                 <br>
                 <b>事件参数：</b>
                 <br>
@@ -31,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <%= for {key, value} <-  event.obvious_event.args do %>
+                        <%= for {key, value} <-  event.event_decoded.args do %>
                             <tr>
                             <th scope="row" style="width: 10px;"><%= "#{key}"%></th>
                             <td style="word-wrap:break-word;word-break:break-all;"><%= "#{value}"%></td>

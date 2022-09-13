@@ -3,8 +3,8 @@ defmodule SuperIssuer.Ethereum.EventLog do
   alias SuperIssuer.Ethereum.{Event, Argument}
   alias __MODULE__
 
-  @type t :: %EventLog{event: Event.t(), args: %{required(String.t()) => any()}}
-  defstruct [:event, :args]
+  @type t :: %EventLog{event: Event.t(), args: %{required(String.t()) => any()}, signature: String.t()}
+  defstruct [:event, :args, :signature]
 
   def decode(abi, topics, unindexed_data) when is_list(topics) do
     [event_signature | indexed_values] = topics
@@ -22,8 +22,10 @@ defmodule SuperIssuer.Ethereum.EventLog do
     unindexed_names = unindexed_args |> Enum.map(& &1.name)
     unindexed_values = Argument.decode_args(unindexed_types, unindexed_data)
     unindexed_args = [unindexed_names, unindexed_values] |> Enum.zip() |> Enum.into(%{})
-
-    %EventLog{event: event, args: Map.merge(indexed_args, unindexed_args)}
+    args = Map.merge(indexed_args, unindexed_args)
+    signature = ABI.gen_sig(event.name, event.args)
+    # attention: hex sig using:  Crypto.gen_event_signature("Transfer(address,address,uint256)")
+    %EventLog{event: event, args: args, signature: signature}
   end
 
   def encode(%EventLog{event: event, args: args}) do
@@ -43,4 +45,6 @@ defmodule SuperIssuer.Ethereum.EventLog do
     topics = [event_signature] ++ encoded_indexed_args
     {topics, "0x" <> encoded_unindexed_args}
   end
+
+
 end

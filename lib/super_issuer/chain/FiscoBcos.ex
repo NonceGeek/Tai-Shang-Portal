@@ -160,7 +160,7 @@ defmodule SuperIssuer.Chain.FiscoBcos do
   # +-------------+
   # | Evi Handler |
   # +-------------+
-  def handle_ele_in_evi(updated_eles, %{obvious_event: %{args: args}} , ele) do
+  def handle_ele_in_evi(updated_eles, %{event_decoded: %{args: args}} , ele) do
     # handle_by_the_rules
     evi =
       args
@@ -184,7 +184,7 @@ defmodule SuperIssuer.Chain.FiscoBcos do
   # +---------------+
   # | Event Handler |
   # +---------------+
-  def handle_ele_in_event(event, %{obvious_event: %{args: args}}, :acct) do
+  def handle_ele_in_event(event, %{event_decoded: %{args: args}}, :acct) do
     from_addr =  Map.get(args, "from")
     to_addr = Map.get(args, "to")
     with true <- not is_nil(from_addr),

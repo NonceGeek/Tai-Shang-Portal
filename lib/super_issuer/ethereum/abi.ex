@@ -19,6 +19,22 @@ defmodule SuperIssuer.Ethereum.ABI do
     end)
   end
 
+  def decode_input(input, abi) do
+    {sig_str, params} =  String.split_at(input, 10)
+    %{signature: signature} = find_func_by_abi(sig_str, abi)
+    %{
+      func: signature,
+      params: ABI.decode(signature, Base.decode16!(params,case: :lower))
+    }
+  end
+
+  def find_func_by_abi(sig_str, abi) do
+    funcs = get_funcs(abi)
+    Enum.find(funcs, fn %{signature_bytes: signature_bytes} ->
+      signature_bytes == sig_str
+    end)
+  end
+
   def get_funcs(abi) do
     abi
     |> StructTranslater.to_atom_struct()
@@ -26,12 +42,16 @@ defmodule SuperIssuer.Ethereum.ABI do
       type == @abi_type.function
     end)
     |> Enum.map(fn ele ->
+    inputs =  ele.inputs |> Enum.map(&%Argument{name: &1.name, type: :"#{&1.type}"})
     %Function{
         name: ele.name,
-        inputs:
-          ele.inputs |> Enum.map(&%Argument{name: &1.name, type: :"#{&1.type}"}),
+        inputs: inputs,
         outputs:
-          ele.outputs |> Enum.map(&%Argument{name: &1.name, type: :"#{&1.type}"})
+          ele.outputs |> Enum.map(&%Argument{name: &1.name, type: :"#{&1.type}"}),
+        signature_bytes:
+          Function.gen_sig_bytes(ele.name, inputs),
+        signature:
+          gen_sig(ele.name, inputs)
       }
     end)
   end
@@ -64,5 +84,9 @@ defmodule SuperIssuer.Ethereum.ABI do
   end
   def handle_func_ele(:name, func) do
     func.name
+  end
+
+  def gen_sig(name, inputs) do
+    "#{name}(#{inputs |> Enum.map(&Argument.canonical_type_of(&1.type)) |> Enum.join(",")})"
   end
 end

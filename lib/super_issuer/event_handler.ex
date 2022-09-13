@@ -9,6 +9,16 @@ defmodule SuperIssuer.EventHandler do
     |> do_handle_event_by_contract()
   end
 
+  def handle_event(event, contract) do
+    abi = contract.contract_template.abi
+    %{signature: signature, args: args} = event_decoded = EventLog.decode(
+      abi,
+      event.topics,
+      event.data
+      )
+    %{event: signature, params: args}
+  end
+
   @doc """
     event_log exp:
     %SuperIssuer.Ethereum.EventLog{
@@ -30,14 +40,13 @@ defmodule SuperIssuer.EventHandler do
     }
   """
   def do_handle_event_by_contract(event_preloaded) do
-
     abi = event_preloaded.tx.contract.contract_template.abi
-    obvious_event = EventLog.decode(
+    event_decoded = EventLog.decode(
       abi,
       event_preloaded.topics,
       event_preloaded.data
       )
 
-    Map.put(event_preloaded, :obvious_event, obvious_event)
+    Map.put(event_preloaded, :event_decoded, event_decoded)
   end
 end

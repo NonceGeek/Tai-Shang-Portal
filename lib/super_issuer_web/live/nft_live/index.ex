@@ -22,7 +22,7 @@ defmodule SuperIssuerWeb.NftLive.Index do
       {
         :noreply,
         socket
-        |> put_flash(:error, "this addr has not any NFT.")
+        |> put_flash(:error, "this addr has not any SBT.")
       }
     end
 

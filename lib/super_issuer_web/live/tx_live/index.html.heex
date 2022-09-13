@@ -1,0 +1,35 @@
+<div style="width:80%;margin: 0 auto;" x-data>
+    <br>
+    <center><h3>Tx Panel</h3></center>
+        <div class="card">
+            <div class="card-header">
+                <%= @tx.tx_hash %>
+            </div>
+        <div class="card-body">
+            <%= raw(Earmark.as_html!(
+            "
+- **from:** #{@tx.from}
+- **to:** #{@tx.to}
+- **the contract belongs to:** [#{@tx.contract.addr}](/live/contracts?contract_id=#{@tx.contract_id})
+- **input decoded:** 
+
+```
+#{inspect(@tx.input_decoded)}
+```
+- **input raw:** 
+```
+#{inspect(@tx.input)}
+```
+- **Events:**
+"))%>
+<%= for event <- @tx.event do %>
+<%= raw(Earmark.as_html!(
+"
+    signatue: #{event.event_decoded["event"]}
+    params: #{inspect(event.event_decoded["params"])}
+"))%>
+<% end %>
+        </div>
+    </div>
+
+</div>
