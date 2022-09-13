@@ -36,8 +36,8 @@ defmodule SuperIssuerWeb.Router do
     live "/live/clock", ClockLive
     live "/live/credential", CredentialLive
     live "/live/credential/new", CredentialLive.New
-    live "/live/contracts", ContractLive
-    live "/live/contracts/source_code", ContractSourceCodeLive
+    live "/live/contract", ContractLive
+    live "/live/contract/source_code", ContractSourceCodeLive
     live "/live/evidence", EvidencerLive
 
     live "/live/nft", NftLive.Index

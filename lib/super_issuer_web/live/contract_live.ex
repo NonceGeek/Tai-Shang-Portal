@@ -8,7 +8,7 @@ defmodule SuperIssuerWeb.ContractLive do
     ContractView.render("contract.html", assigns)
   end
 
-  def mount(%{"contract_addr" => contract_addr}, _session, socket) do
+  def mount(%{"addr" => contract_addr}, _session, socket) do
     contract =
       contract_addr
       |> Contract.get_by_addr()
@@ -20,7 +20,7 @@ defmodule SuperIssuerWeb.ContractLive do
     }
   end
 
-  def mount(%{"contract_id" => contract_id}, _session, socket) do
+  def mount(%{"id" => contract_id}, _session, socket) do
     contract =
       contract_id
       |> Contract.get_by_id()
