@@ -5,18 +5,13 @@
     ")) %>
 
     <%= for nft <- @nfts do %>
-        <div class="card">
-            <br>
-            <center>
-            <iframe allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" scrolling="yes" sandbox="allow-scripts; allow-popups-to-escape-sandbox" style="width: 400px" src={nft.uri["payload"]["external_url"]} />
-            </center>
-
+    <div class="card">
         <div class="card-body">
         <%= raw(Earmark.as_html!(
             "
 - **token id:** #{nft.token_id}
 - **owner:** #{nft.owner}
-- **see full SBT new tab:** [#{nft.uri["payload"]["external_url"]}](#{nft.uri["payload"]["external_url"]})
+- **see full SBT in new tab:** [#{nft.uri["payload"]["external_url"]}](#{nft.uri["payload"]["external_url"]})
 "))%>
 
         </div>

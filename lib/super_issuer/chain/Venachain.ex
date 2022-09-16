@@ -17,7 +17,7 @@ defmodule SuperIssuer.Chain.Venachain do
     {block_formatted, raw_txs} =
       fetch_block_and_raw_txs(chain, height)
 
-    txs_filtered = filter_txs(raw_txs)
+    txs_filtered = filter_txs(raw_txs, chain)
     txs_formatted =  handle_txs(txs_filtered, chain, height)
     Repo.transaction(fn ->
       block_formatted =  Map.put(block_formatted, :tx, txs_formatted)
@@ -80,7 +80,7 @@ defmodule SuperIssuer.Chain.Venachain do
       %{input: input, value: value} = StructTranslater.to_atom_struct(payload)
       tx_hash
       |> HttpClient.eth_get_transaction_receipt([url: node])
-      |> handle_receipt(height, input, value, tx)
+      |> handle_receipt(height, input, value)
     end)
   end
 
@@ -90,30 +90,45 @@ defmodule SuperIssuer.Chain.Venachain do
     hash
   end
 
-  def filter_txs(txs) do
+  def filter_txs(txs, %{config: %{"node" => node}} = _chain) do
     contracts_local = Contract.get_all()
     txs
     # set contract_id of every tx
     |> Enum.map(fn tx ->
+      tx_hash = tx_to_hash(tx)
+      Logger.info("tx_hash: #{tx_hash}")
+      {:ok, payload} =
+        tx_hash
+        |> HttpClient.eth_get_transaction_by_hash([url: node])
       contract =
-        tx
+        payload
+        |> StructTranslater.to_atom_struct()
         |> get_contract_of_tx(contracts_local)
         |> Contract.preload()
-      Map.put(tx, :contract, contract)
+      case contract do
+        nil ->
+          nil
+        _ ->
+          tx_hash
+      end
     end)
     # eject the nil tx
-    |> Enum.reject(fn %{contract: contract} ->
-      is_nil(contract)
-    end)
+    |> Enum.reject(&(is_nil(&1)))
   end
 
-  def handle_receipt({:ok, raw_tx_receipt}, height, input, value, tx) do
+  def handle_receipt({:ok, raw_tx_receipt}, height, input, value) do
     raw_tx_receipt
     |> StructTranslater.to_atom_struct()
-    |> do_handle_receipt(height, input, value, tx.contract)
+    |> do_handle_receipt(height, input, value)
   end
-  def do_handle_receipt(%{from: from_addr, to: to_addr, transactionHash: tx_hash, logs: logs, status: status}, height, input, value, contract) when status == "0x1" do
-    tx = build_tx(from_addr, to_addr, tx_hash, input, value, contract)
+  def do_handle_receipt(%{from: from_addr, to: to_addr, transactionHash: tx_hash, logs: logs, status: status}, height, input, value) when status == "0x1" do
+    tx = build_tx(from_addr, to_addr, tx_hash, input, value)
+    contracts_local = Contract.get_all()
+    contract =
+      tx
+      |> get_contract_of_tx(contracts_local)
+      |> Contract.preload()
+    tx = update_tx(tx, contract)
     events =
       Enum.map(logs, fn payload ->
         case payload do
@@ -126,21 +141,25 @@ defmodule SuperIssuer.Chain.Venachain do
     Map.put(tx, :event, events)
   end
 
-  def do_handle_receipt(%{from: _from_addr, to: _to_addr, transactionHash: _tx_hash, logs: _logs, status: _status}, _height, _contract) do
+  def do_handle_receipt(%{from: _from_addr, to: _to_addr, transactionHash: _tx_hash, logs: _logs, status: _status}, _height) do
     :tx_is_failed
   end
 
-  def build_tx(from, to, tx_hash, input, value, %{contract_template: %{abi: abi}} = contract) do
-    input_decoded = ABI.decode_input(input, abi)
+  def build_tx(from, to, tx_hash, input, value) do
     %Tx{
       from: from,
       to: to,
       tx_hash: tx_hash,
       input: input,
-      input_decoded: input_decoded,
-      value: TypeTranslator.hex_to_int(value),
-      contract: contract
+      value: TypeTranslator.hex_to_int(value)
     }
+  end
+
+  def update_tx(tx, %{contract_template: %{abi: abi}} = contract) do
+    input_decoded = ABI.decode_input(tx.input, abi)
+    tx
+    |> Map.put(:input_decoded, input_decoded)
+    |> Map.put(:contract, contract)
   end
 
   def build_event(addr, data, topics, height, log_index, contract) do
@@ -165,6 +184,7 @@ defmodule SuperIssuer.Chain.Venachain do
 
   def handle_events_in_block(%{tx: txs}, chain) do
     Enum.map(txs, fn tx ->
+      IO.puts inspect tx
       Enum.map(tx.event, fn event->
         event
         |> EventHandler.handle_event_by_contract()
