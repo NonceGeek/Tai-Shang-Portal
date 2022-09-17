@@ -3,6 +3,26 @@ defmodule SuperIssuerWeb.NftLive.Index do
     alias SuperIssuer.{Nft, Contract}
 
     @impl true
+    def mount(%{"nft_contract_id" => contract_id, "addr" => addr}, _session, socket) do
+      contract = %{id: id} =
+        contract_id
+        |> Contract.get_by_id()
+        |> Contract.preload()
+      nfts =
+        contract
+        |> Contract.preload()
+        |> Map.get(:nfts)
+        |> Enum.filter(fn %{owner: owner} ->
+          String.downcase(owner) == String.downcase(addr)
+        end)
+      nft_num = Enum.count(nfts)
+      socket
+      |> assign(contract: contract)
+      |> assign(nft_num: nft_num)
+      |> assign(nfts: nfts)
+    end
+
+    @impl true
     def mount(%{"nft_contract_id" => contract_id}, _session, socket) do
       {:ok, init(socket, contract_id)}
     end
