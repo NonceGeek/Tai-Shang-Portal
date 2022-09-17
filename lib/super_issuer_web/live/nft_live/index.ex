@@ -16,10 +16,10 @@ defmodule SuperIssuerWeb.NftLive.Index do
           String.downcase(owner) == String.downcase(addr)
         end)
       nft_num = Enum.count(nfts)
-      socket
+      {:ok, socket
       |> assign(contract: contract)
       |> assign(nft_num: nft_num)
-      |> assign(nfts: nfts)
+      |> assign(nfts: nfts)}
     end
 
     @impl true
